@@ -1,0 +1,19 @@
+.admin {
+	display:flex;
+	height: 100vh;
+	width: 100vw;
+
+	background-color: #101010;
+
+	color: #888;
+}
+
+.visualizer {
+	display: flex;
+	align-items: center;
+	height: 80vh;
+	width: 70vw;
+
+	align-self: center;
+	justify-self: center;
+}

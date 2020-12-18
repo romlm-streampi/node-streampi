@@ -1,0 +1,106 @@
+.script-setter-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 100vw;
+	background-color: rgba(30, 30, 30, .7);
+	z-index: 100;
+}
+
+.script-setter {
+	display: flex;
+	position: fixed;
+	z-index: 1000;
+	background-color: #323232;
+	flex-direction: column;
+	width: 60vw;
+	height: 80vh;
+	margin: 10vh 10vh auto 15vw;
+	border-radius: 1rem;
+	padding: 1rem;
+	justify-content: space-between;
+}
+
+.script-setter-close {
+	height: 3rem;
+	width: 3rem;
+	align-self: flex-start;
+	justify-self: flex-start;
+}
+
+.script-setter-close>svg {
+	fill: --color;
+}
+
+.script-setter-submit {
+	all: unset;
+	text-transform: uppercase;
+	font-weight: 500;
+	justify-self: flex-end;
+	margin-top: 0;
+	padding: 1rem 2rem;
+}
+
+.script-setter-submit, .script-setter-close, .script-setter-delete {
+	user-select: none;
+	cursor: pointer;
+	transition: background-color .15s linear;
+	border-radius: .5rem;
+}
+
+.script-setter-submit:hover, .script-setter-close:hover {
+	background-color: #1e1e1e;
+}
+
+.script-setter-submit:active, .script-setter-close:active {
+	background-color: inherit;
+}
+
+.script-setter-submit:disabled, .script-setter-delete:disabled {
+	cursor: not-allowed;
+}
+
+.script-setter-submit:disabled:active {
+	background-color: #1e1e1e;
+}
+
+.script-setter-form-filePicker {
+	display: none;
+}
+
+.script-setter-form-fileViewer {
+	max-height: 30vh;
+	max-width: 30vw;
+	overflow: auto;
+	border-radius: 1rem;
+	border: grey solid .5rem;
+	transition: border-color .2s ease;
+}
+
+.script-setter-form-fileViewer:hover {
+	border-color: #505050;
+}
+
+.buttons-container {
+	display: flex;
+	justify-content: space-between;
+}
+
+.script-setter-delete {
+	display: flex;
+	all: unset;
+	text-transform: uppercase;
+	font-weight: 500;
+	justify-self: flex-end;
+	margin-top: 0;
+	padding: 1rem 2rem;
+	color: white;
+	border-radius: .5rem;
+	transition: background-color .15s ease-in-out;
+}
+
+.script-setter-delete:hover {
+	background-color: #f74d4d;
+
+}
