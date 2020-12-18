@@ -12,6 +12,9 @@
 /.next/
 /out/
 
+#vs code files
+.vscode/
+
 # production
 /build
 
