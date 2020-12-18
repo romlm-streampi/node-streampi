@@ -1,0 +1,74 @@
+.script-panel {
+	display: flex;
+	height: 100%;
+
+	background-color: #323232;
+	flex: 1;
+	flex-direction: column;
+	position: relative;
+	padding: .5rem;
+
+	user-select: none;
+}
+
+.panel-pane {
+	overflow: hidden;
+	width: 100%;
+	transition: all 1s ease;
+	padding-left: .5rem;
+}
+
+.script-pane-label {
+	display: flex;
+	border-radius: 5px;
+	width: auto;
+	padding-left: 2rem;
+	background-color: black;
+	position: relative;
+	text-align: center;
+}
+
+.script-pane-label-arrow {
+	display: inline-block;
+	fill: --color;
+	transition: .3s ease-in-out all;
+	position: absolute;
+	transform: translate(-100%, -100%);
+	transform: rotateZ(0deg);
+	position: absolute;
+	left: .7rem;
+	bottom: .2rem;
+	width: 1rem;
+	height: 1rem;
+}
+
+.panel-pane-toggler:checked + .script-pane-label > .script-pane-label-arrow {
+	transform: rotateZ(90deg);
+}
+.panel-pane-untoggled {
+	height: 0;
+}
+
+.panel-pane-toggled {
+	height: auto;
+}
+
+.panel-pane-toggler {
+	display: none;
+}
+
+.script-pane-script {
+	width: auto;
+	display: block;
+	padding: 0 1rem;
+	border-radius: 5px;
+	transition: background-color .1s ease;
+}
+
+.script-pane-script:hover {
+	background-color: #1E1E1E;
+}
+
+.script-pane-script:active {
+	background-color: #101010;
+}

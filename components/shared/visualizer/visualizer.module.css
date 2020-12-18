@@ -1,0 +1,33 @@
+.visualizer {
+	display: flex;
+	align-items: center;
+	height: 100vh;
+	width: 100vw;
+
+	align-self: center;
+	justify-self: center;
+}
+
+.visualizer-column {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	flex: 1;
+}
+
+.button-frame.selected-button {
+	border: 2px grey solid;
+}
+
+.button-frame {
+	border: 1px solid black;
+	border-radius: 20%;
+	background-color: rgb(50,50,50);
+	align-items: center;
+	flex-direction: column;
+	justify-content: center;
+
+	height: 0;
+	flex: 1 1 0;
+	margin: 1rem;
+}
