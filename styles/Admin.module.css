@@ -17,3 +17,11 @@
 	align-self: center;
 	justify-self: center;
 }
+
+.dark-filter {
+	z-index: 100;
+	position: absolute;
+	height: 100vh;
+	width: 100vw;
+	background-color: rgba(30, 30, 30, .7)
+}

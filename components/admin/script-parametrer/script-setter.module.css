@@ -1,38 +1,153 @@
+/* containers styling */
+
 .script-setter-container {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100vh;
-	width: 100vw;
-	background-color: rgba(30, 30, 30, .7);
-	z-index: 100;
+	position: fixed;
+	z-index: 1000;
+	max-height: 90vh;
+	overflow-y: auto;
+	overflow-x: hidden;
+	display: flex;
+	width: 80vw;
+	background-color: rgb(50, 50, 50);
+	border-radius: 1rem;
+	margin: 5vw 10vw;
 }
 
 .script-setter {
-	display: flex;
-	position: fixed;
-	z-index: 1000;
-	background-color: #323232;
-	flex-direction: column;
-	width: 60vw;
-	height: 80vh;
-	margin: 10vh 10vh auto 15vw;
-	border-radius: 1rem;
 	padding: 1rem;
+	display: flex;
+	flex-direction: column;
 	justify-content: space-between;
+	height: 100%;
+	width: 100%;
+}
+
+/* generic styling */
+
+.script-setter-button {
+	all: unset;
+	transition: all .15s ease-in-out;
+	border-radius: .5rem;
+	text-transform: uppercase;
+	font-weight: 600;
+	font-size: 1.2rem;
+}
+
+.script-setter-button:disabled {
+	cursor: not-allowed;
+}
+
+.script-setter-button:hover {
+	color: white;
+	fill: white;
+}
+
+/* header styling */
+
+.script-setter-header {
+	width: 100%;
+	display: flex;
+	position: relative;
+	align-items: center;
 }
 
 .script-setter-close {
 	height: 3rem;
 	width: 3rem;
-	align-self: flex-start;
+	align-self: center;
 	justify-self: flex-start;
+}
+
+.script-setter-close:hover {
+	background-color: rgb(40, 40, 40);
 }
 
 .script-setter-close>svg {
 	fill: --color;
 }
 
+/* forms styling */
+.script-setter-form {
+	margin: .2rem 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.script-setter-form fieldset {
+	all: unset;
+	display: flex;
+	flex-direction: column;
+	padding: .5rem;
+	margin: .5rem 0;
+}
+
+.script-setter-form input[type="text"] {
+	all: unset;
+	border-radius: .5rem;
+	padding: .2rem;
+	background-color: black;
+	width: 10rem;
+}
+
+/* button parametrer form styling */
+.script-setter-form__button-parametrer {
+	display: flex;
+	flex-direction: column;
+}
+
+.script-setter-form__filePicker {
+	display: none;
+}
+
+.script-setter-form__fileViewer {
+	max-height: 30vh;
+	max-width: 30vw;
+	overflow: auto;
+	border-radius: 1rem;
+	border: grey solid .3rem;
+	transition: all .2s ease;
+}
+
+.script-setter-form__fileViewer:hover {
+	border-color: #454545;
+}
+
+/* script parametrer form styling */
+.script-setter-form__script-parametrer {
+	display: flex;
+	flex-direction: column;
+}
+
+.script-parametrer__param-form {
+	display: flex;
+	flex-direction: column;
+}
+
+
+/* footer styling */
+.script-setter-footer {
+	display: flex;
+	width: 100%;
+	align-content: center;
+	justify-content: space-between;
+	padding: .3rem 1rem;
+}
+
+.script-setter-footer > .script-setter-button {
+	padding: .5rem 2rem;
+}
+
+.script-setter-footer > .script-setter-delete:hover {
+	background-color: rgb(241, 64, 64);
+	
+}
+
+.script-setter-footer > .script-setter-submit:hover {
+	background-color: rgba(6, 84, 187, 0.856);
+	
+}
+
+/*
 .script-setter-submit {
 	all: unset;
 	text-transform: uppercase;
@@ -49,8 +164,14 @@
 	border-radius: .5rem;
 }
 
-.script-setter-submit:hover, .script-setter-close:hover {
+.script-setter-close:hover {
 	background-color: #1e1e1e;
+	color: white;
+}
+
+.script-setter-submit:hover {
+	background-color: #2bb61fd2;
+	color: white;
 }
 
 .script-setter-submit:active, .script-setter-close:active {
@@ -74,7 +195,7 @@
 	max-width: 30vw;
 	overflow: auto;
 	border-radius: 1rem;
-	border: grey solid .5rem;
+	border: grey solid .3rem;
 	transition: border-color .2s ease;
 }
 
@@ -95,12 +216,12 @@
 	justify-self: flex-end;
 	margin-top: 0;
 	padding: 1rem 2rem;
-	color: white;
 	border-radius: .5rem;
 	transition: background-color .15s ease-in-out;
 }
 
 .script-setter-delete:hover {
 	background-color: #f74d4d;
+	color: white;
 
-}
+}*/
