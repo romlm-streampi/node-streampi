@@ -1,12 +1,12 @@
 import { Component } from "react";
 import ScriptSetter from "../components/admin/script-parametrer/script-setter";
 import ScriptPanel from "../components/admin/scripts-panel/scripts-panel";
-import ButtonInfo, { BackButtonInfo, FolderButtonInfo, ScriptableButtonInfo } from "../model/button-info";
+import Visualizer from "../components/shared/visualizer/visualizer";
+import { BackButtonInfo, FolderButtonInfo, ScriptableButtonInfo } from "../model/button-info";
 import Layout, { ButtonPositioner, getDefaultLayout, setButtonForLayoutAt } from "../model/layout";
 import ScriptInfo from "../model/script-info";
-import Visualizer from "../components/shared/visualizer/visualizer";
-import styles from "../styles/Admin.module.css";
 import { deleteImage, getLayoutFromServer, getScriptsFromServer, prepareLayout, saveLayout } from "../model/utils/client-utils";
+import styles from "../styles/Admin.module.css";
 
 
 const ADD_FOLDER_SCRIPT = { name: "add folder", category: "management" };
@@ -95,7 +95,7 @@ export default class Admin extends Component<{}, AdminState> {
 
 	}
 
-	onScriptSet = (info: ButtonInfo) => {
+	onScriptSet = (info: ScriptableButtonInfo) => {
 
 		const { pickedScript, pickedButton, currentLayout } = this.state;
 
@@ -113,7 +113,8 @@ export default class Admin extends Component<{}, AdminState> {
 			}
 
 			else {
-				buttonInfo = { text: info.text, iconPath: info.iconPath, script: pickedScript };
+				buttonInfo = { text: info.text, iconPath: info.iconPath, script: info.script };
+				console.log(buttonInfo);
 
 			}
 
@@ -137,7 +138,15 @@ export default class Admin extends Component<{}, AdminState> {
 
 		return (
 			<div className={styles.admin}>
-				{(pickedButton && pickedScript) && <ScriptSetter scriptInfo={pickedButton?.info} onDelete={this.onScriptDelete} onCloseRequested={this.onScriptCloseRequested} onScriptChanged={this.onScriptSet} />}
+				{
+					(pickedButton && pickedScript) &&
+					(
+						<>
+							<ScriptSetter scriptInfo={pickedScript} buttonInfo={pickedButton?.info} onDelete={this.onScriptDelete} onCloseRequested={this.onScriptCloseRequested} onScriptChanged={this.onScriptSet} />
+							<div className={styles["dark-filter"]}></div>
+						</>
+					)
+				}
 				<Visualizer layout={currentLayout} onButtonClicked={this.onButtonClicked} className={styles.visualizer} highlightSelected={true} />
 				<ScriptPanel scripts={this.scripts} onScriptPicked={this.onScriptPicked} />
 			</div>

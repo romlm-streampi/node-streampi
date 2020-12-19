@@ -95,7 +95,10 @@ app.prepare().then(() => {
 
 		const funcs = scripts.filter(({ category, name }) => (category === data.category && name === data.name)).map(({ func }) => (func));
 		if (funcs.length === 1) {
-			res.status(200).json({ success: funcs[0](data.parameters) })
+			const params = {};
+			data.parameters.map(({name, value}) => {params[name]=value})
+
+			res.status(200).json({ success: funcs[0](params) })
 		} else {
 			res.status(404).end();
 		}

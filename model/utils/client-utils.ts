@@ -53,7 +53,7 @@ export async function deleteImage(iconPath: string) {
 		headers: {
 			"api-key": process.env.API_KEY
 		}
-	})
+	}).catch((_err) => false);
 }
 
 export async function getLayoutFromServer() {
