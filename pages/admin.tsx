@@ -6,10 +6,10 @@ import Layout, { ButtonPositioner, getDefaultLayout, setButtonForLayoutAt } from
 import ScriptInfo from "../model/script-info";
 import Visualizer from "../components/shared/visualizer/visualizer";
 import styles from "../styles/Admin.module.css";
-import { getLayoutFromServer, prepareLayout, saveLayout } from "../model/utils/client-utils";
+import { deleteImage, getLayoutFromServer, getScriptsFromServer, prepareLayout, saveLayout } from "../model/utils/client-utils";
 
 
-const ADD_FOLDER_SCRIPT = { id: "addFolder", name: "add folder", category: "management" };
+const ADD_FOLDER_SCRIPT = { name: "add folder", category: "management" };
 
 interface AdminState {
 	pickedScript: ScriptInfo | undefined,
@@ -34,12 +34,12 @@ export default class Admin extends Component<{}, AdminState> {
 
 	componentDidMount() {
 
-		// TODO : implement server fetching
-		this.scripts.push({ id: "scr1", name: "test", category: "test category", parameters: {} });
-		this.scripts.push({ id: "scr2", name: "test2", category: "test category 2", parameters: {} });
+		getScriptsFromServer().then((scripts: ScriptInfo[]) => {
+			this.scripts = scripts;
+			this.scripts.push(ADD_FOLDER_SCRIPT);
+		})
 
 
-		this.scripts.push(ADD_FOLDER_SCRIPT);
 
 		getLayoutFromServer().then(
 			(layout: Layout) => {
@@ -59,7 +59,7 @@ export default class Admin extends Component<{}, AdminState> {
 
 		const { pickedScript } = this.state;
 		if (!(info instanceof BackButtonInfo)) {
-			
+
 			if (pickedScript) {
 				this.setState({ pickedButton: positioner })
 			} else {
@@ -67,14 +67,14 @@ export default class Admin extends Component<{}, AdminState> {
 					console.log("no info provided");
 				}
 				else if ((info as ScriptableButtonInfo).script) {
-					this.setState({pickedButton: positioner, pickedScript: (info as ScriptableButtonInfo).script});
+					this.setState({ pickedButton: positioner, pickedScript: (info as ScriptableButtonInfo).script });
 				}
 				else if ((info as FolderButtonInfo).layout) {
 					this.setState({ currentLayout: (info as FolderButtonInfo).layout, pickedButton: undefined })
 				}
 			}
 		} else {
-			this.setState({currentLayout: info.layout});
+			this.setState({ currentLayout: info.layout });
 		}
 
 	}
@@ -84,8 +84,13 @@ export default class Admin extends Component<{}, AdminState> {
 		const { pickedButton, currentLayout } = this.state;
 
 		currentLayout.buttons = currentLayout.buttons.filter((positioner: ButtonPositioner) => (positioner.colIndex !== pickedButton?.colIndex || positioner.rowIndex !== pickedButton.rowIndex))
-		this.setState({ pickedButton: undefined });
 
+		if (pickedButton?.info?.iconPath) {
+			deleteImage(pickedButton.info.iconPath);
+
+		}
+
+		this.setState({ pickedButton: undefined });
 		saveLayout(this.rootLayout);
 
 	}

@@ -74,6 +74,18 @@ app.prepare().then(() => {
 		forward();
 	});
 
+	server.delete("/api/image/:name", (req, res) => {
+		const {name} = req.params;
+
+		fs.unlink(`public/resources/icons/${name}`, (err) => {
+			if(err) {
+				res.status(500).end();
+			} else {
+				res.status(200).end();
+			}
+		})
+	})
+
 	server.get("/api/scripts", (req, res) => {
 		res.json(scripts.map(({ category, name, parameters }) => ({ category, name, parameters })));
 	});

@@ -26,8 +26,12 @@ export async function sendFile(file: File): Promise<any> {
 }
 
 export async function sendScript(script: ScriptInfo) {
-
-	console.log(`TODO : implement the sendScript method, script: ${script}`);
+	const executeApi = `${BASE_API_URL}/scripts`;
+	return await axios.post(executeApi, script, {
+		headers: {
+			"api-key": process.env.API_KEY
+		}
+	}).then((response) => JSON.parse(response.data)).catch((_err) => ({ failed: true }));
 
 }
 
@@ -41,15 +45,32 @@ export async function saveLayout(layout: Layout) {
 
 }
 
-export async function getLayoutFromServer() {
-	const requestUrl = `${BASE_API_URL}/layout`;
+export async function deleteImage(iconPath: string) {
+	const deleteURL = `${BASE_API_URL}/image`;
+	const name = iconPath.split("/").pop();
 
-	return await axios.get(requestUrl, { headers: { "api-key": process.env.API_KEY } })
+	return await axios.delete(`${deleteURL}/${name}`, {
+		headers: {
+			"api-key": process.env.API_KEY
+		}
+	})
+}
+
+export async function getLayoutFromServer() {
+	const requestURL = `${BASE_API_URL}/layout`;
+
+	return await axios.get(requestURL, { headers: { "api-key": process.env.API_KEY } })
 		.then(
 			(response) => {
 				return (response.data && response.data.buttons) ? response.data : getDefaultLayout();
 			}).catch((_error) => getDefaultLayout());
 
+}
+
+export async function getScriptsFromServer() {
+	const requestURL = `${BASE_API_URL}/scripts`;
+
+	return await axios.get(requestURL, { headers: { "api-key": process.env.API_KEY } }).then((response) => response.data || []).catch((_err) => []);
 }
 
 
