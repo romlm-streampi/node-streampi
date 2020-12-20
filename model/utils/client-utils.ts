@@ -6,10 +6,9 @@ import Layout, { ButtonPositioner, getDefaultLayout, setButtonForLayoutAt } from
 import ScriptInfo from "../script-info";
 
 
-export const IMAGE_BASE_PATH = "/resources/icons/"
+export const IMAGE_BASE_PATH = `${process.env.BASE_URL}/resources/icons`;
 
-// TODO : implement dynamic url
-const BASE_API_URL = "http://localhost:3000/api";
+const BASE_API_URL = process.env.BASE_URL+"/api";
 
 export async function sendFile(file: File): Promise<any> {
 	const submitURL = `${BASE_API_URL}/image`;

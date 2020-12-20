@@ -3,31 +3,35 @@ const next = require("next");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const multer = require("multer");
-const getPlugins = require("node-plugin-func");
 const fs = require("fs");
 
 const dev = process.env.NODE_ENV !== "production";
 const port = process.env.PORT || 3000;
+const host = process.env.HOST || "localhost";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const LAYOUT_STORING_PATH = __dirname + "/storage/layout.json";
 
 // TODO : implement real script fetching
-const scripts = [
-	{
-		category: "test",
-		name: "say hello",
-		func: ({ name }) => { console.log(`hello, ${name}`); return true },
-		parameters: [
-			{
-				name: "name",
-				type: "string",
-				description: "the name of the person you want to say hi to"
-			}
-		]
+const getPlugins = (folder) => {
+	const plugins = [];
+	try {
+		const files = fs.readdirSync(folder)
+
+		files.forEach((file) => {
+			const plugin = require(`${folder}/${file}`.replace("//", "/"));
+			// plugins.push(...plugin);
+		});
+	} catch (err) {
+		console.error(err);
 	}
-]
+
+	return plugins;
+
+}
+
+const scripts = getPlugins(__dirname + "/storage/plugins");
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -75,10 +79,10 @@ app.prepare().then(() => {
 	});
 
 	server.delete("/api/image/:name", (req, res) => {
-		const {name} = req.params;
+		const { name } = req.params;
 
 		fs.unlink(`public/resources/icons/${name}`, (err) => {
-			if(err) {
+			if (err) {
 				res.status(500).end();
 			} else {
 				res.status(200).end();
@@ -87,6 +91,7 @@ app.prepare().then(() => {
 	})
 
 	server.get("/api/scripts", (req, res) => {
+		console.log(scripts)
 		res.json(scripts.map(({ category, name, parameters }) => ({ category, name, parameters })));
 	});
 
@@ -96,7 +101,7 @@ app.prepare().then(() => {
 		const funcs = scripts.filter(({ category, name }) => (category === data.category && name === data.name)).map(({ func }) => (func));
 		if (funcs.length === 1) {
 			const params = {};
-			data.parameters.map(({name, value}) => {params[name]=value})
+			data.parameters.map(({ name, value }) => { params[name] = value })
 
 			res.status(200).json({ success: funcs[0](params) })
 		} else {

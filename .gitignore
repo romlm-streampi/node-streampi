@@ -36,6 +36,6 @@ yarn-error.log*
 # vercel
 .vercel
 
-#storing files
+#storage files
 storage/**
 public/resources/icons/**
