@@ -7,6 +7,8 @@ export default interface ButtonInfo {
 }
 
 export interface FolderButtonInfo extends ButtonInfo {
+	text: string;
+	iconPath?: string;
 	layout: Layout;
 }
 
@@ -22,5 +24,7 @@ export class BackButtonInfo implements FolderButtonInfo {
 }
 
 export interface ScriptableButtonInfo extends ButtonInfo {
+	text: string;
+	iconPath?: string;
 	script: ScriptInfo;
 }

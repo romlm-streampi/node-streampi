@@ -13,7 +13,6 @@ const handle = app.getRequestHandler();
 
 const LAYOUT_STORING_PATH = __dirname + "/storage/layout.json";
 
-// TODO : implement real script fetching
 const getPlugins = (folder) => {
 	const plugins = [];
 	try {
@@ -21,7 +20,7 @@ const getPlugins = (folder) => {
 
 		files.forEach((file) => {
 			const plugin = require(`${folder}/${file}`.replace("//", "/"));
-			// plugins.push(...plugin);
+			plugins.push(...plugin);
 		});
 	} catch (err) {
 		console.error(err);
@@ -91,7 +90,6 @@ app.prepare().then(() => {
 	})
 
 	server.get("/api/scripts", (req, res) => {
-		console.log(scripts)
 		res.json(scripts.map(({ category, name, parameters }) => ({ category, name, parameters })));
 	});
 

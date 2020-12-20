@@ -11,8 +11,9 @@
 .visualizer {
 	display: flex;
 	align-items: center;
-	height: 80vh;
+	height: 85vh;
 	width: 70vw;
+	padding: 0 5vw;
 
 	align-self: center;
 	justify-self: center;

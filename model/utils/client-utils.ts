@@ -6,11 +6,13 @@ import Layout, { ButtonPositioner, getDefaultLayout, setButtonForLayoutAt } from
 import ScriptInfo from "../script-info";
 
 
-export const IMAGE_BASE_PATH = `${process.env.BASE_URL}/resources/icons`;
+export const IMAGE_BASE_PATH = `${process.env.BASE_URL}/resources/icons/`;
 
 const BASE_API_URL = process.env.BASE_URL+"/api";
 
 export async function sendFile(file: File): Promise<any> {
+
+	console.log("sent image")
 	const submitURL = `${BASE_API_URL}/image`;
 	const data: FormData = new FormData();
 

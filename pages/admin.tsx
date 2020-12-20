@@ -79,14 +79,14 @@ export default class Admin extends Component<{}, AdminState> {
 
 	}
 
-	onScriptDelete = () => {
+	onScriptDelete = (positioner: ButtonPositioner) => {
 
-		const { pickedButton, currentLayout } = this.state;
+		const { currentLayout } = this.state;
 
-		currentLayout.buttons = currentLayout.buttons.filter((positioner: ButtonPositioner) => (positioner.colIndex !== pickedButton?.colIndex || positioner.rowIndex !== pickedButton.rowIndex))
+		currentLayout.buttons = currentLayout.buttons.filter((pos: ButtonPositioner) => (positioner.colIndex !== pos.colIndex || positioner.rowIndex !== pos.rowIndex))
 
-		if (pickedButton?.info?.iconPath) {
-			deleteImage(pickedButton.info.iconPath);
+		if (positioner.info?.iconPath) {
+			deleteImage(positioner.info.iconPath);
 
 		}
 
@@ -104,10 +104,12 @@ export default class Admin extends Component<{}, AdminState> {
 			let buttonInfo: ScriptableButtonInfo | FolderButtonInfo;
 			if (pickedScript.category === "management") {
 				// implement all management scripts
-				if (true) {
+				if (pickedScript === ADD_FOLDER_SCRIPT) {
 					const backButton: BackButtonInfo = new BackButtonInfo(currentLayout);
 					const subLayout: Layout = { rowNumber: currentLayout.rowNumber, colNumber: currentLayout.colNumber, buttons: [{ colIndex: 0, rowIndex: 0, info: backButton }] }
 					buttonInfo = { text: info.text, iconPath: info.iconPath, layout: subLayout };
+				} else {
+					return;
 				}
 
 			}
@@ -142,7 +144,7 @@ export default class Admin extends Component<{}, AdminState> {
 					(pickedButton && pickedScript) &&
 					(
 						<>
-							<ScriptSetter scriptInfo={pickedScript} buttonInfo={pickedButton?.info} onDelete={this.onScriptDelete} onCloseRequested={this.onScriptCloseRequested} onScriptChanged={this.onScriptSet} />
+							<ScriptSetter scriptInfo={pickedScript} positioner={pickedButton} onDelete={this.onScriptDelete} onCloseRequested={this.onScriptCloseRequested} onScriptChanged={this.onScriptSet} />
 							<div className={styles["dark-filter"]}></div>
 						</>
 					)

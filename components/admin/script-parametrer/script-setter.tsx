@@ -1,5 +1,7 @@
+import { cloneDeep } from "lodash";
 import { ChangeEvent, FormEvent, useState } from "react";
-import ButtonInfo, { ScriptableButtonInfo } from "../../../model/button-info";
+import { ScriptableButtonInfo } from "../../../model/button-info";
+import { ButtonPositioner } from "../../../model/layout";
 import ScriptInfo, { ScriptParameter } from "../../../model/script-info";
 import { IMAGE_BASE_PATH, sendFile } from "../../../model/utils/client-utils";
 import styles from "./script-setter.module.css";
@@ -10,12 +12,19 @@ const ParamForm = ({ param, onParamChanged }: { param: ScriptParameter, onParamC
 
 	const [value, setValue] = useState(param.value);
 
-	if (param.type === "string") {
+	if (param.type === "string" || param.type === "boolean") {
 
-		const onChange = (ev: ChangeEvent<HTMLInputElement>) => {
+		const onTextChange = (ev: ChangeEvent<HTMLInputElement>) => {
 			const { target: { value } } = ev;
 			setValue(value);
-			onParamChanged({ name: param.name, description: param.description, type: param.type, value: value, provider: param.provider })
+			onParamChanged({ name: param.name, description: param.description, type: param.type, value, provider: param.provider })
+		}
+
+		const onCheckedChange = (ev: ChangeEvent<HTMLInputElement>) => {
+			const { target: { checked } } = ev;
+			console.log(`checked: ${checked}`)
+			setValue(checked);
+			onParamChanged({ name: param.name, description: param.description, type: param.type, value: checked, provider: param.provider })
 		}
 
 		const id = `${param.name.replace(" ", "-").toUpperCase()}__${Date.now()}`
@@ -23,26 +32,36 @@ const ParamForm = ({ param, onParamChanged }: { param: ScriptParameter, onParamC
 		return (
 			<div className={styles["script-parametrer__param-form"]}>
 				<label htmlFor={id} >{param.name}: </label>
-				<input type="text" onChange={onChange} value={value} id={id} />
-				{ param.description && (<p className={styles["script-param-form__decription"]}>
-					{param.description}
-				</p>)}
+
+				{
+					param.type === "boolean" && (
+						<input type="checkbox" onChange={onCheckedChange} checked={value} id={id} />
+					)
+				}
+				{
+					param.type === "string" && (
+						<input type="text" onChange={onTextChange} value={value} id={id} />
+					)
+				}
+				{ param.description && (
+					<p className={styles["script-param-form__decription"]}>
+						{param.description}
+					</p>
+				)}
 			</div>
 		);
 	}
 	return (<></>);
 }
 
-export default function ScriptSetter({ buttonInfo, scriptInfo: info, onScriptChanged, onDelete, onCloseRequested }: { buttonInfo: ScriptableButtonInfo | undefined, scriptInfo: ScriptInfo, onScriptChanged: ((scriptInfo: ButtonInfo) => any), onDelete: () => void, onCloseRequested: () => any }) {
+export default function ScriptSetter({ positioner, scriptInfo: info, onScriptChanged, onDelete, onCloseRequested }: { positioner: ButtonPositioner, scriptInfo: Readonly<ScriptInfo>, onScriptChanged: ((scriptInfo: ScriptableButtonInfo) => any), onDelete: (positioner: ButtonPositioner) => void, onCloseRequested: () => any }) {
 
-	console.log("button info:", buttonInfo);
-
-	const [formValid, setFormValid] = useState(buttonInfo !== undefined);
+	const [formValid, setFormValid] = useState(positioner.info !== undefined);
 	const [file, setFile] = useState<File | undefined>(undefined);
-	const [iconPath, setIconPath] = useState(buttonInfo?.iconPath);
-	const [text, setText] = useState(buttonInfo?.text);
+	const [iconPath, setIconPath] = useState(positioner.info?.iconPath);
+	const [text, setText] = useState(positioner.info?.text);
 
-	const [scriptInfo,] = useState(info);
+	const scriptInfo = cloneDeep(info);
 
 	const onFileChanged = (ev: ChangeEvent<HTMLInputElement>) => {
 
@@ -88,7 +107,7 @@ export default function ScriptSetter({ buttonInfo, scriptInfo: info, onScriptCha
 					onScriptChanged({ text, iconPath: IMAGE_BASE_PATH + path, script: scriptInfo } as ScriptableButtonInfo);
 				}
 			}).catch(console.error);
-		} else if(iconPath && text) {
+		} else if (iconPath && text) {
 			onScriptChanged({ text, iconPath: iconPath, script: scriptInfo } as ScriptableButtonInfo);
 		}
 
@@ -142,7 +161,7 @@ export default function ScriptSetter({ buttonInfo, scriptInfo: info, onScriptCha
 
 				</div>
 				<footer className={styles["script-setter-footer"]}>
-					<button className={[styles["script-setter-button"], styles["script-setter-delete"]].join(" ")} onClick={onDelete} disabled={!buttonInfo}>delete</button>
+					<button className={[styles["script-setter-button"], styles["script-setter-delete"]].join(" ")} onClick={() => onDelete({ colIndex: positioner.colIndex, rowIndex: positioner.rowIndex, info: positioner.info })} disabled={!formValid}>delete</button>
 					<button className={[styles["script-setter-button"], styles["script-setter-submit"]].join(" ")} type="submit" disabled={!formValid}>ok</button>
 				</footer>
 			</form>
