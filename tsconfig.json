@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"outDir": "dist",
+		"module": "es6",
+		"target": "esnext",
+		"jsx": "react",
+		"moduleResolution": "node",
+		"noImplicitAny": false,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"baseUrl": "./",
+		"typeRoots": ["src/typings.d.ts"],
+		"paths": {
+			"@pages/*": ["./pages/*"],
+			"@components/*": ["./src/components/*"],
+			"@model/*": ["./src/model/*"]
+		}
+	}
+}

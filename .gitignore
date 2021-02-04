@@ -1,0 +1,7 @@
+#build files
+dist/
+
+#local config
+storage/
+plugins/
+node_modules/

@@ -1,0 +1,96 @@
+@import '../../../styles/globals.scss';
+
+.container {
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-auto-rows: 1fr;
+	padding: 10vh 3vw;
+}
+
+@mixin container-size($cols, $rows) {
+	$default-gap: 50px;
+	grid-template: repeat($rows, 1fr) / repeat($cols, 1fr);
+
+	row-gap: $default-gap;
+	column-gap: ($cols/$rows) * $default-gap;
+}
+
+.container-mini {
+	@include container-size(3, 2)
+}
+
+.container-default {
+	@include container-size(5, 3);
+}
+
+.container-large {
+	@include container-size(8, 4);
+}
+
+@mixin row-pos($row) {
+	grid-row: $row / span 1;
+}
+
+@mixin col-pos($col) {
+	grid-column: $col / span 1;
+}
+
+.container {
+	.row-1 {@include row-pos(1);}
+	.row-2 {@include row-pos(2);}
+	.row-3 {@include row-pos(3);}
+	.row-4 {@include row-pos(4);}
+	.col-1 {@include col-pos(1);}
+	.col-2 {@include col-pos(2);}
+	.col-3 {@include col-pos(3);}
+	.col-4 {@include col-pos(4);}
+	.col-5 {@include col-pos(5);}
+	.col-6 {@include col-pos(6);}
+	.col-7 {@include col-pos(7);}
+	.col-8 {@include col-pos(8);}
+}
+
+.container {
+	& > .button {
+		background-color: $dark-3;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		transition: all .15s ease-in-out;
+		border: .2rem solid $dark-3;
+		border-radius: 1.5rem;
+		
+		&:hover {
+			border-color: $dark-4;
+		}
+
+		&:active {
+			background-color: $dark-2;
+			border-color: $dark-2;
+		}
+
+		& > .icon-canvas {
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100%;
+			width: 100%;
+			overflow: hidden;
+
+			& > .icon {
+				height: 80%;
+				width: 80%;
+			}
+			
+		}
+		& .text {
+			height: 0;
+			transform: translateY(.2rem);
+		}
+		
+	}
+}
