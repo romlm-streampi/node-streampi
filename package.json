@@ -1,6 +1,6 @@
 {
   "name": "streampi",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,11 +13,11 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "multer": "^1.4.2",
     "nanoid": "^3.1.20",
     "object-assign": "^4.1.1",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "sound-component": "file:../sound-component"
+    "react-dom": "^17.0.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.22",
