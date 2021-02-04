@@ -9,7 +9,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-server.use((req, res, forward) => {
+app.use((req, res, forward) => {
 	const { headers } = req
 	if (headers["api-key"] === "hello") {
 		forward();
