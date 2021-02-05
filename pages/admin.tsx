@@ -1,64 +1,67 @@
 import Visualizer from "@components/visualizer";
-import Layout from "@model/layout";
-import { MANAGEMENT_SCRIPTS } from "@model/management-scripts";
-import { IScriptDescriptor, IScriptInstance } from "@model/script";
-import { nanoid } from "nanoid";
+import Layout, { createLayout, IPositioner } from "@model/layout";
+import { IsFolderScript, IsManagementScript } from "@model/management-scripts";
+import { getLayout, executeScript } from "@utils/http-utils";
 import React from "react";
-
-const testDescriptor: IScriptDescriptor = {
-	id: {
-		moduleName: "test",
-		script: "test"
-	},
-	info: {
-		displayName: "a test script"
-	}
-
-}
-
-const testInstance: IScriptInstance = {
-	descriptor: testDescriptor,
-	text: "test script",
-	iconPath: "/images/test.png"
-}
 
 
 interface IState {
-	layouts: Layout[];
+	currentLayout?: Layout;
+}
+
+function getLayoutFromId(layouts: Layout[], layoutId: string) {
+	return layouts.find(({ id }) => id === layoutId);
 }
 
 export default class Admin extends React.Component<{}, IState> {
 
+	private layouts: Layout[];
+	private parentLayoutsIds: string[] = [];
+
 	constructor(props) {
 		super(props);
-		this.state = { layouts: [] }
+		this.state = {};
 	}
 
-	componentDidMount() {
-		const testInstance2 = {
-			descriptor: MANAGEMENT_SCRIPTS.ADD_FOLDER_DESCRIPTOR,
-			parameters: { layoutId: nanoid() },
-			text: "test script 2",
-			iconPath: "/resources/nico_plat.png"
+	async componentDidMount() {
+		getLayout().then((data: Layout[]) => {
+			this.layouts = data;
+			if (data.length <= 0)
+				this.layouts.push(createLayout())
+			this.setState({ currentLayout: this.layouts[0] });
+		});
+	}
+
+	onLayoutChangeRequest = (layoutId: string) => {
+		const layout = getLayoutFromId(this.layouts, layoutId);
+		if (layout) {
+			this.parentLayoutsIds.push(this.state.currentLayout.id);
+			this.setState({ currentLayout: layout });
+			console.log("changed layout");
+		} else {
+			console.warn("could not find layout ", layoutId);
 		}
-		const positioners = [
-			{ script: testInstance, colIndex: 1, rowIndex: 2 },
-			{ script: testInstance2, colIndex: 2, rowIndex: 3 }
-		]
-		this.setState({ layouts: [new Layout(nanoid(), { colNumber: 5, rowNumber: 3 }, positioners)] });
 	}
 
-	onLayoutChangeRequest = (id: string) => {
-		console.log("fetching layout", id);
+	onButtonClicked = (positioner: IPositioner): Promise<any> | undefined => {
+		const descriptor = positioner.script.descriptor;
+		if (IsManagementScript(descriptor)) {
+			if(IsFolderScript(descriptor) && positioner.script.parameters?.layoutId) {
+				this.onLayoutChangeRequest(positioner.script.parameters?.layoutId);
+			}
+
+		} else {
+			return executeScript(positioner.script);
+		}
 	}
 
 
 	render() {
-		const { layouts } = this.state;
+		const { currentLayout: layout } = this.state;
 		return (
 			<div>
 				{
-					(layouts && layouts.length > 0) && (<Visualizer onLayoutChangeRequest={this.onLayoutChangeRequest} layout={layouts[0]} />)
+					layout && (<Visualizer onButtonClicked={this.onButtonClicked} layout={layout} />)
 				}
 			</div>
 		)

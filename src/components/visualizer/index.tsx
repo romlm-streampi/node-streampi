@@ -9,7 +9,7 @@ import styles from './visualizer.module.scss';
 
 const getPositionStyling = (positioner: IPositioner) => [styles[`col-${positioner.colIndex}`], styles[`row-${positioner.rowIndex}`]].join(' ');
 
-const Button = ({ positioner, onClick }: { positioner: IPositioner, onClick: (positioner: IPositioner) => void }) => {
+const Button = ({ positioner, onClick }: { positioner: IPositioner, onClick: (positioner: IPositioner) => void, key?: string }) => {
 	return (<div className={[getPositionStyling(positioner), styles.button].join(' ')} onClick={(ev) => onClick(positioner)}>
 		<div className={styles["icon-canvas"]}>
 			<img src={positioner.script.iconPath} className={styles.icon} />
@@ -21,12 +21,11 @@ const Button = ({ positioner, onClick }: { positioner: IPositioner, onClick: (po
 
 interface IProps {
 	layout: Layout;
-	onLayoutChangeRequest?: (id: string) => void;
 	onButtonClicked?: (positioner: IPositioner) => void;
 }
 
 
-export default function Visualizer({ layout, onLayoutChangeRequest, onButtonClicked }: IProps) {
+export default function Visualizer({ layout, onButtonClicked }: IProps) {
 
 	let sizeStyle;
 	if (isEqual(layout.size, { colNumber: 3, rowNumber: 2 })) {
@@ -37,22 +36,10 @@ export default function Visualizer({ layout, onLayoutChangeRequest, onButtonClic
 		sizeStyle = styles['container-large']
 	}
 
-	const onClick = (positioner: IPositioner) => {
-		const mgmtScript = IsManagementScript(positioner.script.descriptor);
-		if (mgmtScript && onLayoutChangeRequest) {
-			if (IsFolderScript(positioner.script.descriptor) && positioner.script.parameters?.layoutId) {
-				onLayoutChangeRequest(positioner.script.parameters.layoutId);
-			}
-		} else {
-			if (onButtonClicked)
-				onButtonClicked(positioner);
-		}
-	}
-
 	return (
 		<div className={[styles.container, sizeStyle].join(' ')}>
 			{
-				layout.positioners.map((positioner) => <Button key={nanoid()} onClick={onClick} positioner={positioner} />)
+				layout.positioners.map((positioner) => <Button key={nanoid()} onClick={onButtonClicked} positioner={positioner} />)
 			}
 		</div>
 	);
