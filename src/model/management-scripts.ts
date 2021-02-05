@@ -26,7 +26,11 @@ export class FolderScript implements IScriptInstance {
 }
 
 export function IsManagementScript(descriptor: IScriptDescriptor) {
-	return Object.values(MANAGEMENT_SCRIPTS).map(({ id }) => id).includes(descriptor.id);
+	for(let id of Object.values(MANAGEMENT_SCRIPTS).map(({id}) => id)) {
+		if(isEqual(id, descriptor.id))
+			return true
+	}
+	return false;
 }
 
 export function IsFolderScript(descriptor: IScriptDescriptor) {
