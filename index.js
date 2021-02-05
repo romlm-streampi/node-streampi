@@ -3,10 +3,10 @@ const path = require("path");
 const bodyParser = require('body-parser');
 const multer = require("multer");
 const fs = require("fs");
+const {GetPlugins} = require("./server-model/plugins");
 
 
-// TODO : implement plugin fetching
-const plugins = {};
+const plugins = GetPlugins();
 
 const app = express();
 
@@ -96,29 +96,32 @@ app.post('/api/scripts/:moduleName/:scriptId', (req, res) => {
 	console.log(plugins);
 
 	const { moduleName, scriptId } = req.params;
+	const plugin = plugins[moduleName];
+	const params = req.body;
 
-	if (plugins[moduleName] && plugins[moduleName][scriptId]) {
-		const { func } = plugins[moduleName][scriptId];
+	if (plugin && plugin.scripts && plugin.scripts[scriptId]) {
+		const script = plugin.scripts[scriptId];
 		try {
-			res.json(func(req.body));
-		} catch (err) {
-			res.status(500).send(err.message);
-		}
+			res.json(script(params));
 
+		} catch (err) {
+			res.status(500).end();
+		}
 	} else {
-		res.status(404).send("cound not find request script");
+		res.status(404).end();
 	}
+	res.end();
 
 });
 
-app.post('/api/providers/:moduleName/:providerName', (req, res) => {
+app.get('/api/providers/:moduleName/:providerName', (req, res) => {
 	const { moduleName, providerName } = req.params;
 	const plugin = plugins[moduleName];
 
 	if (plugin && plugin.providers && plugin.providers[providerName]) {
 		const provider = plugin.providers[providerName];
 		try {
-			res.json({ values: provider() })
+			res.json(provider());
 
 		} catch (err) {
 			res.status(500).end();
