@@ -35,7 +35,7 @@ export async function sendFile(file: File): Promise<any> {
 }
 
 
-export async function executeScript(script: IScriptInstance) {
+export async function executeScript(script: IScriptInstance): Promise<any> {
 	const executeApi = resolve(BASE_API_URL, "scripts", script.descriptor.id.moduleName, script.descriptor.id.script);
 	const body = script.parameters;
 
@@ -44,7 +44,7 @@ export async function executeScript(script: IScriptInstance) {
 		.catch((err) => ({ failed: true, err }))
 }
 
-export async function getProvider(providerId: IScriptIdentifier) {
+export async function getProvider(providerId: IScriptIdentifier): Promise<any> {
 	const executeApi = resolve(BASE_API_URL, "providers", providerId.moduleName, providerId.script);
 	return await axios.get(executeApi, { headers: defaultHeaders })
 		.then((res) => res.data)
@@ -56,7 +56,7 @@ export async function saveLayouts(layouts: Layout[]) {
 	await axios.post(saveURL, layouts, { headers: defaultHeaders }).catch(console.warn);
 }
 
-export async function deleteImage(iconPath: string) {
+export async function deleteImage(iconPath: string): Promise<any> {
 	const deleteURL = `${BASE_API_URL}/image`;
 	const name = iconPath.split("/").pop();
 
@@ -70,4 +70,12 @@ export async function getLayout(): Promise<Layout[]> {
 	return axios.get(requestURL, { headers: defaultHeaders })
 		.then((res) => res.data)
 		.catch((err) => ({ failed: true, err }));
+}
+
+export async function getPluginNames(): Promise<string[]> {
+	const requestURL = resolve(BASE_API_URL, "names");
+	return await axios.get(requestURL, { headers: defaultHeaders })
+		.then((response) => response.data)
+		.catch((err) => ({ failed: true, err }));
+
 }
