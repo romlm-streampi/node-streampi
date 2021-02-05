@@ -2,9 +2,13 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require('body-parser');
 const multer = require("multer");
+const fs = require("fs");
+
+
+// TODO : implement plugin fetching
+const plugins = {};
 
 const app = express();
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -54,6 +58,7 @@ app.delete("/api/image/:name", (req, res) => {
 	})
 });
 
+app.get('/api/names', (_req, res) => res.json(Object.keys(plugins)));
 
 app.get("/api/layout", (_req, res) => {
 
@@ -85,6 +90,44 @@ app.post("/api/layout", (req, res) => {
 
 app.use("/assets", express.static(path.join(__dirname, "dist")));
 app.use("/resources", express.static(path.resolve(__dirname, "storage", "images")));
+
+app.post('/api/scripts/:moduleName/:scriptId', (req, res) => {
+
+	console.log(plugins);
+
+	const { moduleName, scriptId } = req.params;
+
+	if (plugins[moduleName] && plugins[moduleName][scriptId]) {
+		const { func } = plugins[moduleName][scriptId];
+		try {
+			res.json(func(req.body));
+		} catch (err) {
+			res.status(500).send(err.message);
+		}
+
+	} else {
+		res.status(404).send("cound not find request script");
+	}
+
+});
+
+app.post('/api/providers/:moduleName/:providerName', (req, res) => {
+	const { moduleName, providerName } = req.params;
+	const plugin = plugins[moduleName];
+
+	if (plugin && plugin.providers && plugin.providers[providerName]) {
+		const provider = plugin.providers[providerName];
+		try {
+			res.json({ values: provider() })
+
+		} catch (err) {
+			res.status(500).end();
+		}
+	} else {
+		res.status(404).end();
+	}
+	res.end();
+});
 
 
 app.get(['/', "/client", "/admin"], (_req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));

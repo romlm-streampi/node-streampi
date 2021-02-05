@@ -9,11 +9,13 @@
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"baseUrl": "./",
+		"types": ["node"],
 		"typeRoots": ["src/typings.d.ts"],
 		"paths": {
 			"@pages/*": ["./pages/*"],
 			"@components/*": ["./src/components/*"],
-			"@model/*": ["./src/model/*"]
+			"@model/*": ["./src/model/*"],
+			"@utils/*": ["./src/utils/*"]
 		}
 	}
 }

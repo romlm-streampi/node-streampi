@@ -20,7 +20,8 @@ module.exports = {
 			"@pages": path.resolve(__dirname, "pages" ),
 			"@styles": path.resolve(__dirname, "styles"),
 			"@components": path.resolve(__dirname, "src", "components"),
-			"@model": path.resolve(__dirname, "src", "model")
+			"@model": path.resolve(__dirname, "src", "model"),
+			"@utils": path.resolve(__dirname, "src", "utils")
 		}
 	},
 	module: {
@@ -57,6 +58,10 @@ module.exports = {
 		]
 	},
 	plugins: [
-		new MiniCssExtractPlugin({filename: '[name].css'})
+		new MiniCssExtractPlugin({filename: '[name].css'}),
+		new webpack.DefinePlugin({
+			"process.env.BASE_URL": JSON.stringify("http://localhost:3000"),
+			"process.env.API_KEY": JSON.stringify("hello")
+		})
 	]
 }
