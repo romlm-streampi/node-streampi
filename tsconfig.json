@@ -1,13 +1,14 @@
 {
 	"compilerOptions": {
 		"outDir": "dist",
-		"module": "es6",
+		"module": "esnext",
 		"target": "esnext",
 		"jsx": "react",
 		"moduleResolution": "node",
 		"noImplicitAny": false,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
+		"allowJs": true,
 		"baseUrl": "./",
 		"types": ["node"],
 		"typeRoots": ["src/typings.d.ts"],
@@ -15,7 +16,8 @@
 			"@pages/*": ["./pages/*"],
 			"@components/*": ["./src/components/*"],
 			"@model/*": ["./src/model/*"],
-			"@utils/*": ["./src/utils/*"]
+			"@utils/*": ["./src/utils/*"],
+			"@plugins/*": ["./plugins/components"]
 		}
 	}
 }

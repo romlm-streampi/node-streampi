@@ -7,6 +7,7 @@ export interface IScriptIdentifier {
 export interface IScriptInfo {
 	displayName: string;
 	description?: string;
+	category?: string;
 }
 
 export interface IScriptDescriptor {
