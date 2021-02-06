@@ -1,1 +1,33 @@
 @import '../../../styles/globals.scss';
+
+.container {
+	
+	display: flex;
+	flex-direction: column;
+	overflow: hidden auto;
+
+	& > .pane {
+		padding: .5rem;
+		
+
+		& > .title {
+			display: block;
+			text-transform: uppercase;
+			font-size: 1.2rem;
+			transform: translateX(1rem);
+			padding: .5rem;
+		}
+
+		& > .content {
+			background-color: green;
+			transform: translateX(2rem);
+			overflow: hidden;
+			transition: max-height .1s linear;
+			max-height: 0;
+		}
+
+		& > .content-expanded {
+			max-height: 100%;
+		}
+	}
+}

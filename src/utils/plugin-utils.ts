@@ -14,7 +14,7 @@ export async function GetPlugins(names: string[]): Promise<PluginComponent[]> {
 						script: exp.script
 					},
 					info: {
-						displayName: exp.displayName,
+						displayName: exp.displayName || exp.script,
 						description: exp.description,
 						category: exp.category
 					}

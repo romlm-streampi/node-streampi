@@ -1,12 +1,15 @@
+@import "./globals.scss";
+
 .admin-container {
 	display: flex;
 	flex-direction: row;
 
 	& > div:first-child {
-		background-color: white;
+		flex: 7;
 	}
 
 	& > div:nth-child(2) {
-		background-color: blue;
+		background-color: $dark-6;
+		flex: 2;
 	}
 }
