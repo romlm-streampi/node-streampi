@@ -3,7 +3,7 @@ const path = require("path");
 const bodyParser = require('body-parser');
 const multer = require("multer");
 const fs = require("fs");
-const {GetPlugins} = require("./server-model/plugins");
+const { GetPlugins } = require("./server-model/plugins");
 
 
 const plugins = GetPlugins();
