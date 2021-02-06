@@ -17,7 +17,8 @@
 			"@components/*": ["./src/components/*"],
 			"@model/*": ["./src/model/*"],
 			"@utils/*": ["./src/utils/*"],
-			"@plugins/*": ["./plugins/components"]
+			"@plugins/*": ["./plugins/components/*"],
+			"@styles/*": ["./styles/*"]
 		}
 	}
 }

@@ -1,10 +1,12 @@
 import Visualizer from "@components/visualizer";
+import ScriptPicker from "@components/script-picker";
 import Layout, { createLayout, IPositioner } from "@model/layout";
 import { IsFolderScript, IsManagementScript } from "@model/management-scripts";
 import { PluginComponent } from "@model/plugin-export";
 import { getLayout, executeScript, getPluginNames } from "@utils/http-utils";
 import { GetPlugins } from "@utils/plugin-utils";
 import React from "react";
+import styles from "@styles/admin.module.scss";
 
 
 interface IState {
@@ -70,11 +72,14 @@ export default class Admin extends React.Component<{}, IState> {
 
 
 	render() {
-		const { currentLayout: layout } = this.state;
+		const { currentLayout: layout, plugins } = this.state;
 		return (
-			<div>
+			<div className={styles["admin-container"]}>
 				{
 					layout && (<Visualizer onButtonClicked={this.onButtonClicked} layout={layout} />)
+				}
+				{
+					plugins && (<ScriptPicker plugins={plugins} />)
 				}
 			</div>
 		)
