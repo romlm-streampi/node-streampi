@@ -52,7 +52,6 @@ export default class Admin extends React.Component<{}, IState> {
 		if (layout) {
 			this.parentLayoutsIds.push(this.state.currentLayout.id);
 			this.setState({ currentLayout: layout });
-			console.log("changed layout");
 		} else {
 			console.warn("could not find layout ", layoutId);
 		}
@@ -79,7 +78,7 @@ export default class Admin extends React.Component<{}, IState> {
 					layout && (<Visualizer onButtonClicked={this.onButtonClicked} layout={layout} />)
 				}
 				{
-					plugins && (<ScriptPicker plugins={plugins} />)
+					plugins && (<ScriptPicker onPluginPicked={console.log} plugins={plugins} />)
 				}
 			</div>
 		)

@@ -19,15 +19,22 @@
 		}
 
 		& > .content {
-			background-color: green;
-			transform: translateX(2rem);
+			display: block;
 			overflow: hidden;
-			transition: max-height .1s linear;
+			transform: translateX(2rem);
+			transition: all .5s ease-in;
 			max-height: 0;
-		}
 
-		& > .content-expanded {
-			max-height: 100%;
+			&.expanded {
+				max-height: 100%;
+			}
+
+			& > .script::after {
+				content: "TODO : implement style for script";
+				display: block;
+				color: red;
+				text-transform: uppercase;
+			}
 		}
 	}
 }
