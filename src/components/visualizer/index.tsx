@@ -1,13 +1,13 @@
 import Layout, { IPositioner } from "@model/layout";
 import { IsFolderScript, IsManagementScript } from "@model/management-scripts";
-import { isEqual } from "lodash";
+import { isEqual, range } from "lodash";
 import { nanoid } from "nanoid";
 import React from "react";
 import styles from './visualizer.module.scss';
 
 
 
-const getPositionStyling = (positioner: IPositioner) => [styles[`col-${positioner.colIndex}`], styles[`row-${positioner.rowIndex}`]].join(' ');
+const getPositionStyling = (positioner: { colIndex: number, rowIndex: number }) => [styles[`col-${positioner.colIndex}`], styles[`row-${positioner.rowIndex}`]].join(' ');
 
 const Button = ({ positioner, onClick }: { positioner: IPositioner, onClick: (positioner: IPositioner) => void, key?: string }) => {
 	return (<div className={[getPositionStyling(positioner), styles.button].join(' ')} onClick={(ev) => onClick(positioner)}>
@@ -15,6 +15,17 @@ const Button = ({ positioner, onClick }: { positioner: IPositioner, onClick: (po
 			<img src={positioner.script.iconPath} className={styles.icon} />
 		</div>
 		<span className={styles.text}>{positioner.script.text}</span>
+	</div>)
+}
+
+const EmptyButton = ({ position, onClick }: { position: { colIndex: number, rowIndex: number }, onClick?: Function }) => {
+	return (<div className={[getPositionStyling(position), styles.button].join(' ')} onClick={() => (onClick || (() => { }))()}>
+		<div className={styles["icon-canvas"]}>
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="grey" width="50%" height="50%">
+				<path d="M0 0h24v24H0z" fill="none" />
+				<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+			</svg>
+		</div>
 	</div>)
 }
 
@@ -34,12 +45,23 @@ export default function Visualizer({ layout, onButtonClicked }: IProps) {
 		sizeStyle = styles['container-default']
 	} else if (isEqual(layout.size, { colNumber: 8, rowNumber: 4 })) {
 		sizeStyle = styles['container-large']
+	} else {
+		throw new Error("unknow layout size: " + layout.size);
 	}
 
 	return (
 		<div className={[styles.container, sizeStyle].join(' ')}>
 			{
-				layout.positioners.map((positioner) => <Button key={nanoid()} onClick={onButtonClicked} positioner={positioner} />)
+				range(1, layout.size.colNumber + 1).map(colIndex => {
+					return range(1, layout.size.rowNumber + 1).map(rowIndex => {
+						return (() => {
+							const positioner = layout.positioners.find(({ colIndex: x, rowIndex: y }) => colIndex === x && rowIndex === y);
+							if (positioner)
+								return <Button positioner={positioner} key={nanoid()} onClick={onButtonClicked} />
+							return <EmptyButton position={{ colIndex, rowIndex }} key={nanoid()} onClick={() => console.log({ colIndex, rowIndex })} />
+						})()
+					})
+				})
 			}
 		</div>
 	);
