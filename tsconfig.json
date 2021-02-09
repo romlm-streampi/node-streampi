@@ -5,20 +5,46 @@
 		"target": "esnext",
 		"jsx": "react",
 		"moduleResolution": "node",
+		"lib": [
+			"DOM",
+			"ES2015",
+			"ES2016",
+			"ES2017",
+			"ES2018",
+			"ES2019",
+			"ES2020",
+			"ESNext"
+		],
 		"noImplicitAny": false,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"allowJs": true,
 		"baseUrl": "./",
-		"types": ["node"],
-		"typeRoots": ["src/typings.d.ts"],
+		"types": [
+			"node"
+		],
+		"typeRoots": [
+			"src/typings.d.ts"
+		],
 		"paths": {
-			"@pages/*": ["./pages/*"],
-			"@components/*": ["./src/components/*"],
-			"@model/*": ["./src/model/*"],
-			"@utils/*": ["./src/utils/*"],
-			"@plugins/*": ["./plugins/components/*"],
-			"@styles/*": ["./styles/*"]
+			"@pages/*": [
+				"./pages/*"
+			],
+			"@components/*": [
+				"./src/components/*"
+			],
+			"@model/*": [
+				"./src/model/*"
+			],
+			"@utils/*": [
+				"./src/utils/*"
+			],
+			"@plugins/*": [
+				"./plugins/components/*"
+			],
+			"@styles/*": [
+				"./styles/*"
+			]
 		}
 	}
 }

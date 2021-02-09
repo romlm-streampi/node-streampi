@@ -93,8 +93,6 @@ app.use("/resources", express.static(path.resolve(__dirname, "storage", "images"
 
 app.post('/api/scripts/:moduleName/:scriptId', (req, res) => {
 
-	console.log(plugins);
-
 	const { moduleName, scriptId } = req.params;
 	const plugin = plugins[moduleName];
 	const params = req.body;

@@ -60,9 +60,9 @@ module.exports = {
 	},
 	plugins: [
 		new MiniCssExtractPlugin({filename: '[name].css'}),
-		new webpack.DefinePlugin({
-			"process.env.BASE_URL": JSON.stringify("http://localhost:3000"),
-			"process.env.API_KEY": JSON.stringify("hello")
+		new webpack.ProvidePlugin({
+			Buffer: ['buffer', 'Buffer'],
+			process: ['process']
 		})
 	]
 }
