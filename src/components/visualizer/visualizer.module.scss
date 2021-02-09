@@ -1,9 +1,12 @@
 @import '../../../styles/globals.scss';
 
 .container {
+	grid-area: vis;
 	display: grid;
 	grid-auto-columns: 1fr;
 	grid-auto-rows: 1fr;
+
+	padding: 5rem;
 }
 
 @mixin container-size($cols, $rows) {

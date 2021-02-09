@@ -1,5 +1,4 @@
 import Layout, { IPositioner } from "@model/layout";
-import { IsFolderScript, IsManagementScript } from "@model/management-scripts";
 import { isEqual, range } from "lodash";
 import { nanoid } from "nanoid";
 import React from "react";
@@ -9,8 +8,8 @@ import styles from './visualizer.module.scss';
 
 const getPositionStyling = (positioner: { colIndex: number, rowIndex: number }) => [styles[`col-${positioner.colIndex}`], styles[`row-${positioner.rowIndex}`]].join(' ');
 
-const Button = ({ positioner, onClick }: { positioner: IPositioner, onClick: (positioner: IPositioner) => void, key?: string }) => {
-	return (<div className={[getPositionStyling(positioner), styles.button].join(' ')} onClick={(ev) => onClick(positioner)}>
+const Button = ({ positioner, onClick }: { positioner: IPositioner, onClick: Function }) => {
+	return (<div className={[getPositionStyling(positioner), styles.button].join(' ')} onClick={() => onClick()}>
 		<div className={styles["icon-canvas"]}>
 			<img src={positioner.script.iconPath} className={styles.icon} />
 		</div>
@@ -18,8 +17,8 @@ const Button = ({ positioner, onClick }: { positioner: IPositioner, onClick: (po
 	</div>)
 }
 
-const EmptyButton = ({ position, onClick }: { position: { colIndex: number, rowIndex: number }, onClick?: Function }) => {
-	return (<div className={[getPositionStyling(position), styles.button].join(' ')} onClick={() => (onClick || (() => { }))()}>
+const EmptyButton = ({ position, onClick }: { position: { colIndex: number, rowIndex: number }, onClick: Function }) => {
+	return (<div className={[getPositionStyling(position), styles.button].join(' ')} onClick={() => onClick()}>
 		<div className={styles["icon-canvas"]}>
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="grey" width="50%" height="50%">
 				<path d="M0 0h24v24H0z" fill="none" />
@@ -32,7 +31,7 @@ const EmptyButton = ({ position, onClick }: { position: { colIndex: number, rowI
 
 interface IProps {
 	layout: Layout;
-	onButtonClicked?: (positioner: IPositioner) => void;
+	onButtonClicked: (positioner: IPositioner | {colIndex: number, rowIndex: number}) => void;
 }
 
 
@@ -57,8 +56,8 @@ export default function Visualizer({ layout, onButtonClicked }: IProps) {
 						return (() => {
 							const positioner = layout.positioners.find(({ colIndex: x, rowIndex: y }) => colIndex === x && rowIndex === y);
 							if (positioner)
-								return <Button positioner={positioner} key={nanoid()} onClick={onButtonClicked} />
-							return <EmptyButton position={{ colIndex, rowIndex }} key={nanoid()} onClick={() => console.log({ colIndex, rowIndex })} />
+								return <Button positioner={positioner} key={nanoid()} onClick={() => onButtonClicked(positioner)} />
+							return <EmptyButton position={{ colIndex, rowIndex }} key={nanoid()} onClick={() => onButtonClicked({colIndex, rowIndex})} />
 						})()
 					})
 				})

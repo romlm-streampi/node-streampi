@@ -1,17 +1,18 @@
+import ButtonParametrer from "@components/button-parametrer";
 import Visualizer from "@components/visualizer";
-import ScriptPicker from "@components/script-picker";
 import Layout, { createLayout, IPositioner } from "@model/layout";
 import { IsFolderScript, IsManagementScript } from "@model/management-scripts";
 import { PluginComponent } from "@model/plugin-export";
-import { getLayout, executeScript, getPluginNames } from "@utils/http-utils";
+import styles from "@styles/admin.module.scss";
+import { executeScript, getLayout, getPluginNames } from "@utils/http-utils";
 import { GetPlugins } from "@utils/plugin-utils";
 import React from "react";
-import styles from "@styles/admin.module.scss";
 
 
 interface IState {
 	currentLayout?: Layout;
 	plugins?: PluginComponent[];
+	currentButton?: IPositioner | { colIndex: number, rowIndex: number }
 }
 
 function getLayoutFromId(layouts: Layout[], layoutId: string) {
@@ -57,29 +58,22 @@ export default class Admin extends React.Component<{}, IState> {
 		}
 	}
 
-	onButtonClicked = (positioner: IPositioner): Promise<any> | undefined => {
-		const descriptor = positioner.script.descriptor;
-		if (IsManagementScript(descriptor)) {
-			if (IsFolderScript(descriptor) && positioner.script.parameters?.layoutId) {
-				this.onLayoutChangeRequest(positioner.script.parameters?.layoutId);
-			}
-
-		} else {
-			return executeScript(positioner.script);
-		}
-	}
-
 
 	render() {
-		const { currentLayout: layout, plugins } = this.state;
+		console.log("re-rendered")
+		const { currentLayout: layout, currentButton, plugins } = this.state;
 		return (
 			<div className={styles["admin-container"]}>
 				{
-					layout && (<Visualizer onButtonClicked={this.onButtonClicked} layout={layout} />)
+					layout && (<Visualizer
+						onButtonClicked={(pos) => this.setState({ currentButton: pos })}
+						layout={layout} />)
 				}
+
 				{
-					plugins && (<ScriptPicker onPluginPicked={console.log} plugins={plugins} />)
+					(currentButton && plugins && plugins.length > 0) ? <ButtonParametrer button={currentButton} plugins={plugins} /> : (<div>pick a button</div>)
 				}
+
 			</div>
 		)
 	}

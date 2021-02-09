@@ -1,15 +1,15 @@
 @import "./globals.scss";
 
 .admin-container {
-	display: flex;
-	flex-direction: row;
+	display: grid;
+	grid-template-areas: 
+	'vis vis vis vis vis vis vis'
+	'vis vis vis vis vis vis vis'
+	'btn btn btn btn btn btn btn'
+	;
 
-	& > div:first-child {
-		flex: 7;
-	}
+	grid-auto-rows: 1fr;
+	grid-auto-columns: 1fr;
 
-	& > div:nth-child(2) {
-		background-color: $dark-6;
-		flex: 2;
-	}
+
 }
