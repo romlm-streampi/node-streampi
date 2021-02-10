@@ -3,9 +3,15 @@ import { IScriptInstance } from "./script";
 
 
 export interface IPositioner {
-	script: IScriptInstance;
+	scripts: IScriptInstance[];
+	info: IPositionerInfo;
 	colIndex: number;
 	rowIndex: number;
+}
+
+export interface IPositionerInfo {
+	text: string;
+	iconPath: string;
 }
 
 export interface ILayoutSize {

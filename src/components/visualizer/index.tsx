@@ -11,9 +11,9 @@ const getPositionStyling = (positioner: { colIndex: number, rowIndex: number }) 
 const Button = ({ positioner, onClick }: { positioner: IPositioner, onClick: Function }) => {
 	return (<div className={[getPositionStyling(positioner), styles.button].join(' ')} onClick={() => onClick()}>
 		<div className={styles["icon-canvas"]}>
-			<img src={positioner.script.iconPath} className={styles.icon} />
+			<img src={positioner.info.iconPath} className={styles.icon} />
 		</div>
-		<span className={styles.text}>{positioner.script.text}</span>
+		<span className={styles.text}>{positioner.info.text}</span>
 	</div>)
 }
 

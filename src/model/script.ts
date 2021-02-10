@@ -18,7 +18,5 @@ export interface IScriptDescriptor {
 
 export interface IScriptInstance {
 	descriptor: IScriptDescriptor;
-	text: string;
-	iconPath: string;
 	parameters?: any;
 }
