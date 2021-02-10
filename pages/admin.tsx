@@ -1,10 +1,9 @@
 import ButtonParametrer from "@components/button-parametrer";
 import Visualizer from "@components/visualizer";
 import Layout, { createLayout, IPositioner } from "@model/layout";
-import { IsFolderScript, IsManagementScript } from "@model/management-scripts";
 import { PluginComponent } from "@model/plugin-export";
 import styles from "@styles/admin.module.scss";
-import { executeScript, getLayout, getPluginNames } from "@utils/http-utils";
+import { getLayout, getPluginNames } from "@utils/http-utils";
 import { GetPlugins } from "@utils/plugin-utils";
 import React from "react";
 
@@ -71,7 +70,12 @@ export default class Admin extends React.Component<{}, IState> {
 				}
 
 				{
-					(currentButton && plugins && plugins.length > 0) ? <ButtonParametrer button={currentButton} plugins={plugins} /> : (<div>pick a button</div>)
+					(currentButton && plugins && plugins.length > 0) ? (<ButtonParametrer
+						onButtonInfoSave={console.log}
+						button={currentButton}
+						onScriptDelete={() => console.log("deleting", currentButton)}
+						plugins={plugins} />)
+						: (<div>pick a button</div>)
 				}
 
 			</div>

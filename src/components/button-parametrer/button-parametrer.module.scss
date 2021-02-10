@@ -1,4 +1,80 @@
+@import '../../../styles/globals.scss';
+
 .container {
 	grid-area: btn;
-	height: 5rem;
+
+	display: grid;
+	grid-template-areas: 'info info info scripts scripts param param param param';
+	grid-auto-columns: 1fr;
+	grid-auto-rows: 1fr;
+	max-height: 33vh;
+
+	& > .form {
+		max-height: 30vh;
+		padding: 1rem;
+		grid-area: info;
+		display: grid;
+
+		grid-auto-rows: 1fr;
+		grid-auto-columns: 1fr;
+
+		gap: 1rem;
+
+		grid-template-areas:'icon icon'
+							'icon icon'
+							'textLabel text'
+							'delete save';
+
+		& > .icon-input {
+			display: none;
+
+			& + label {
+				grid-area: icon;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				& > img {
+					max-width: 100%;
+					max-height: 100%;
+				}
+			}
+		}
+
+		& > .text-input {
+			all: unset;
+			grid-area: text;
+			display: flex;
+
+			& + label {
+				display: flex;
+				grid-area: textLabel;
+				justify-content: center;
+				align-items: center;
+			}
+		}
+
+		& > button {
+			all: unset;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+		}
+
+		& > .delete {
+			grid-area: delete;
+			background-color: red;
+		}
+
+		& > .save {
+			grid-area: save;
+			background-color: blue;
+		}
+
+	}
+
+	& > .scripts {
+		grid-area: scripts;
+		background-color: green;
+	}
 }
