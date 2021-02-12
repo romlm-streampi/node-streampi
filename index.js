@@ -38,7 +38,7 @@ const upload = multer({ storage });
 app.post("/api/image", upload.single("image"), (req, res, forward) => {
 
 	if (req.file) {
-		res.json(JSON.stringify({ path: req.file.filename }));
+		res.json({ filename: req.file.filename });
 	} else {
 		res.status(400).send("bad file type given in form")
 	}
@@ -49,7 +49,7 @@ app.post("/api/image", upload.single("image"), (req, res, forward) => {
 app.delete("/api/image/:name", (req, res) => {
 	const { name } = req.params;
 
-	fs.unlink(`public/resources/icons/${name}`, (err) => {
+	fs.unlink(`storage/images/${name}`, (err) => {
 		if (err) {
 			res.status(500).end();
 		} else {
@@ -69,7 +69,7 @@ app.get("/api/layout", (_req, res) => {
 			if (data.length > 0)
 				res.json(JSON.parse(data.toString()))
 			else
-				res.json({});
+				res.json([]);
 		}
 	});
 
