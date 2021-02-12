@@ -6,7 +6,7 @@ import styles from './visualizer.module.scss';
 
 
 
-const getPositionStyling = (positioner: { colIndex: number, rowIndex: number }) => [styles[`col-${positioner.colIndex}`], styles[`row-${positioner.rowIndex}`]].join(' ');
+const getPositionStyling = (positioner: IPositioner) => [styles[`col-${positioner.colIndex}`], styles[`row-${positioner.rowIndex}`]].join(' ');
 
 const Button = ({ positioner, onClick }: { positioner: IPositioner, onClick: Function }) => {
 	return (<div className={[getPositionStyling(positioner), styles.button].join(' ')} onClick={() => onClick()}>
@@ -17,7 +17,7 @@ const Button = ({ positioner, onClick }: { positioner: IPositioner, onClick: Fun
 	</div>)
 }
 
-const EmptyButton = ({ position, onClick }: { position: { colIndex: number, rowIndex: number }, onClick: Function }) => {
+const EmptyButton = ({ position, onClick }: { position: IPositioner, onClick: Function }) => {
 	return (<div className={[getPositionStyling(position), styles.button].join(' ')} onClick={() => onClick()}>
 		<div className={styles["icon-canvas"]}>
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="grey" width="50%" height="50%">
@@ -31,7 +31,7 @@ const EmptyButton = ({ position, onClick }: { position: { colIndex: number, rowI
 
 interface IProps {
 	layout: Layout;
-	onButtonClicked: (positioner: IPositioner | {colIndex: number, rowIndex: number}) => void;
+	onButtonClicked: (positioner: IPositioner) => void;
 }
 
 
@@ -54,7 +54,7 @@ export default function Visualizer({ layout, onButtonClicked }: IProps) {
 				range(1, layout.size.colNumber + 1).map(colIndex => {
 					return range(1, layout.size.rowNumber + 1).map(rowIndex => {
 						return (() => {
-							const positioner = layout.positioners.find(({ colIndex: x, rowIndex: y }) => colIndex === x && rowIndex === y);
+							const positioner = (layout.positioners || []).find(({ colIndex: x, rowIndex: y }) => colIndex === x && rowIndex === y);
 							if (positioner)
 								return <Button positioner={positioner} key={nanoid()} onClick={() => onButtonClicked(positioner)} />
 							return <EmptyButton position={{ colIndex, rowIndex }} key={nanoid()} onClick={() => onButtonClicked({colIndex, rowIndex})} />
