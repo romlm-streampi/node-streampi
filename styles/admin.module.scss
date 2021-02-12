@@ -1,18 +1,18 @@
 @import "./globals.scss";
 
-.admin-container {
-	display: grid;
-	grid-template-areas: 
-	'vis vis vis vis vis vis vis'
-	'vis vis vis vis vis vis vis'
-	'btn btn btn btn btn btn btn'
-	;
+.container {
+	display: flex;
+	flex-direction: column;
+	width: 100vw;
+	height: 100vh;
+	justify-content: space-between;
+	align-items: center;
 
-	grid-auto-rows: 1fr;
-	grid-auto-columns: 1fr;
-
-	max-height: 100%;
-	max-width: 100%;
-
+	& > .button-mock {
+		flex: 1;
+		height: 30vh;
+		width: 100vw;
+		background-color: $dark-3;
+	}
 
 }
