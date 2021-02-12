@@ -30,7 +30,7 @@ export async function sendFile(file: File): Promise<any> {
 
 	return await axios.post(submitURL, data, {
 		headers: defaultHeaders
-	}).then(response => JSON.parse(response.data))
+	}).then(({data: {filename}}) => `/resources/${filename}`)
 
 }
 
@@ -62,7 +62,8 @@ export async function deleteImage(iconPath: string): Promise<any> {
 
 	return await axios.delete(`${deleteURL}/${name}`, {
 		headers: defaultHeaders
-	}).catch((err) => ({ failed: true, err }));
+	})
+	.catch((err) => ({ failed: true, err }));
 }
 
 export async function getLayout(): Promise<Layout[]> {
