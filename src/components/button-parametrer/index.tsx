@@ -1,23 +1,37 @@
-import { IPositioner, IPositionerInfo } from "@model/layout";
+import Layout, { IManagementPositioner, IPositioner, IPositionerInfo, IScriptPositioner, IsManagementScript } from "@model/layout";
 import { PluginComponent } from "@model/plugin-export";
 import { IScriptInstance } from "@model/script";
-import React, { useEffect, useState } from "react";
+import { nanoid } from "nanoid";
+import React, { useEffect, useRef, useState } from "react";
 import styles from './button-parametrer.module.scss';
 
+
+const FolderPane = ({ onClick }: { onClick: any }) => (
+	<div className={styles['folder-pane']} onClick={onClick}>
+		access folder
+	</div>
+)
+
 interface IProps {
-	button: IPositioner | { colIndex: number, rowIndex: number };
+	button: IPositioner;
 	plugins: PluginComponent[];
 	onButtonInfoSave: ({ text: string, icon: File }) => void;
 	onButtonScriptsChanged?: (scripts: IScriptInstance[]) => void;
-	onScriptDelete: Function
+	onScriptDelete: Function;
+	onLayoutChangeRequest: (layoutId: string) => void;
 }
 
-export default function ButtonParametrer({ button, onButtonInfoSave, onScriptDelete }: IProps) {
+export default function ButtonParametrer({ button, onButtonInfoSave, onScriptDelete, onLayoutChangeRequest }: IProps) {
 
-	const [info, setInfo] = useState<IPositionerInfo>((button as IPositioner).info || { text: "", iconPath: "" });
+	const [info, setInfo] = useState<IPositionerInfo>(button.info || { text: "", iconPath: "" });
+	const [pickedScript, setPickedScript] = useState<IScriptInstance | undefined>();
+
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
-		setInfo((button as IPositioner).info || { text: "", iconPath: "" });
+		fileInputRef.current.files = new DataTransfer().files;
+		setInfo(button.info || { text: "", iconPath: "" });
+		setPickedScript(undefined);
 	}, [button]);
 
 	const onTextChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +43,6 @@ export default function ButtonParametrer({ button, onButtonInfoSave, onScriptDel
 		ev.preventDefault();
 		const { target: { files } } = ev;
 		files[0].arrayBuffer().then((buffer: ArrayBuffer) => {
-			console.log(Buffer);
 			const b64data = Buffer.from(buffer).toString('base64');
 			setInfo({ ...info, iconPath: `data:image/${files[0].type};base64, ${b64data}` });
 		});
@@ -43,24 +56,64 @@ export default function ButtonParametrer({ button, onButtonInfoSave, onScriptDel
 		onButtonInfoSave({ text: info.text, icon: files[0] as File });
 	}
 
+	const onScriptPicked = (ins: IScriptInstance) => {
+		setPickedScript(ins);
+	}
+
 	return (<div className={styles.container}>
 		<form className={styles.form} onSubmit={onInfoFormSubmit}>
-			<input type="file" id="button-file-input" onChange={onImageChange} className={styles['icon-input']} />
+			<input type="file" id="button-file-input" onChange={onImageChange} className={styles['icon-input']} ref={fileInputRef} />
 			<label htmlFor="button-file-input">
-				<img src={info?.iconPath} />
+				{
+					info?.iconPath ? <img src={info?.iconPath} /> : <span>choose an icon</span>
+				}
+
 			</label>
 
 			<input type="text" id="button-text-input" value={info?.text} className={styles['text-input']} onChange={onTextChange} />
 			<label htmlFor="button-text-input">icon title: </label>
 
 
-			<button className={styles.delete} onClick={(ev) => {ev.preventDefault();onScriptDelete()}}>delete script</button>
+			<button className={styles.delete} onClick={(ev) => { ev.preventDefault(); onScriptDelete() }}>delete script</button>
 			<button className={styles.save}>save</button>
 
 		</form>
+		{
+			IsManagementScript(button) ? (() => {
+				const layoutId = (button as IManagementPositioner).management.params.layoutId;
 
-		<div className={styles.scripts}>
-			test
-		</div>
+				if (layoutId === "__parent__") {
+					onLayoutChangeRequest(layoutId);
+				}
+
+				return <FolderPane
+					onClick={() => onLayoutChangeRequest(layoutId)}
+				/>
+			})() : (<><div className={styles.scripts}>
+				<ul className={styles.list}>
+					{
+						((button as IScriptPositioner).scripts || []).map((ins: IScriptInstance) => {
+							return (<li
+								className={styles.script}
+								key={nanoid()}
+								onClick={() => onScriptPicked(ins)}>
+								{ins.descriptor.info.displayName}
+							</li>)
+						})
+					}
+				</ul>
+			</div>
+
+				<div className={styles.param}>
+					{
+						pickedScript ? (<>
+							{pickedScript.parameters}
+						</>)
+							: <>pick a script in the list or add one</>
+					}
+				</div></>)
+		}
+
+
 	</div>)
 }

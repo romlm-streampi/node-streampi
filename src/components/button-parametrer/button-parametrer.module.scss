@@ -1,18 +1,16 @@
 @import '../../../styles/globals.scss';
 
 .container {
-	grid-area: btn;
+	flex: 1;
 
-	display: grid;
-	grid-template-areas: 'info info info scripts scripts param param param param';
-	grid-auto-columns: 1fr;
-	grid-auto-rows: 1fr;
-	max-height: 33vh;
+	display: flex;
+	width: 100vw;
+	background-color: $dark-3;
 
 	& > .form {
-		max-height: 30vh;
+		height: 30vh;
 		padding: 1rem;
-		grid-area: info;
+		flex: 3;
 		display: grid;
 
 		grid-auto-rows: 1fr;
@@ -74,7 +72,43 @@
 	}
 
 	& > .scripts {
-		grid-area: scripts;
-		background-color: green;
+		height: 30vh;
+		flex: 2;
+		display: flex;
+		flex-direction: column;
+
+		background-color: $dark-2;
+		padding: 0 1rem 0 1rem;
+
+		& > ul.list {
+			all: unset;
+			display: flex;
+			flex-direction: column;
+			flex: 3;
+			overflow: hidden scroll;
+
+			& > li.script {
+				all: unset;
+				display: block;
+				width: 100%;
+				padding-left: 1rem;
+
+				&:hover {
+					background-color: $dark-3;
+				}
+			}
+		}
+
+		& > .list + .buttons {
+			flex: 1;
+		}
+	}
+
+	& > .param {
+		flex: 4;
+	}
+
+	& > .folder-pane {
+		flex: 3;
 	}
 }
