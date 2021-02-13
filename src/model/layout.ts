@@ -9,7 +9,7 @@ export interface IScriptPositioner extends IPositioner {
 }
 
 export interface IManagementPositioner extends IPositioner {
-	management: { type: "folder", params: any }
+	management: { type: "folder", parameters: any }
 	info: IPositionerInfo;
 }
 
