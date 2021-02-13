@@ -1,3 +1,4 @@
+import ScriptPicker from "@components/script-picker";
 import Layout, { IManagementPositioner, IPositioner, IPositionerInfo, IScriptPositioner, IsManagementScript } from "@model/layout";
 import { PluginComponent } from "@model/plugin-export";
 import { IScriptInstance } from "@model/script";
@@ -34,12 +35,14 @@ export default function ButtonParametrer({
 	button,
 	onPositionerDelete,
 	onLayoutChangeRequest,
-	onPositionerSave
+	onPositionerSave,
+	plugins
 }: IProps) {
 
 	const [info, setInfo] = useState<IPositionerInfo>(button.info || { text: "", iconPath: "" });
 	const [isScript, setIsScript] = useState<Boolean>((button as IManagementPositioner).management === undefined);
 	const [pickedScript, setPickedScript] = useState<IScriptInstance | undefined>();
+	const [addingScript, setAddingScript] = useState(false);
 
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -122,12 +125,14 @@ export default function ButtonParametrer({
 
 		</form>
 		{
-			IsManagementScript(button) ? (() => {
-				const layoutId = (button as IManagementPositioner).management.parameters.layoutId;
-
-				return <FolderPane
-					onClick={() => onLayoutChangeRequest(layoutId)}
-				/>
+			!isScript ? (() => {
+				const layoutId = (button as IManagementPositioner).management?.parameters?.layoutId;
+				if (layoutId)
+					return <FolderPane
+						onClick={() => onLayoutChangeRequest(layoutId)}
+					/>
+				else 
+					return (<div className={styles["folder-pane"]}>save to generate folder</div>)
 			})() : (<><div className={styles.scripts}>
 				<ul className={styles.list}>
 					{
@@ -141,6 +146,10 @@ export default function ButtonParametrer({
 						})
 					}
 				</ul>
+				<div className={styles.buttons}>
+					<button onClick={() => console.log("TODO: implement script deleter")} className={styles["delete-script"]}>delete script</button>
+					<button onClick={() => setAddingScript(true)} className={styles["add-script"]}>add script</button>
+				</div>
 			</div>
 
 				<div className={styles.param}>
@@ -151,6 +160,9 @@ export default function ButtonParametrer({
 							: <>pick a script in the list or add one</>
 					}
 				</div></>)
+		}
+		{
+			addingScript && <ScriptPicker plugins={plugins} onPluginPicked={(plg) => { setAddingScript(false); console.log("picked", plg) }} />
 		}
 
 

@@ -11,9 +11,9 @@ const getPositionStyling = (positioner: IPositioner) => [styles[`col-${positione
 const Button = ({ positioner, onClick }: { positioner: IPositioner, onClick: Function }) => {
 	return (<div className={[getPositionStyling(positioner), styles.button].join(' ')} onClick={() => onClick()}>
 		<div className={styles["icon-canvas"]}>
-			<img src={positioner.info.iconPath} className={styles.icon} />
+			<img src={positioner.info?.iconPath} className={styles.icon} />
 		</div>
-		<span className={styles.text}>{positioner.info.text}</span>
+		<span className={styles.text}>{positioner.info?.text}</span>
 	</div>)
 }
 
@@ -57,7 +57,7 @@ export default function Visualizer({ layout, onButtonClicked }: IProps) {
 							const positioner = (layout.positioners || []).find(({ colIndex: x, rowIndex: y }) => colIndex === x && rowIndex === y);
 							if (positioner)
 								return <Button positioner={positioner} key={nanoid()} onClick={() => onButtonClicked(positioner)} />
-							return <EmptyButton position={{ colIndex, rowIndex }} key={nanoid()} onClick={() => onButtonClicked({colIndex, rowIndex})} />
+							return <EmptyButton position={{ colIndex, rowIndex }} key={nanoid()} onClick={() => onButtonClicked({ colIndex, rowIndex })} />
 						})()
 					})
 				})
