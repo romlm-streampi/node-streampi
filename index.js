@@ -89,6 +89,7 @@ app.post("/api/layout", (req, res) => {
 })
 
 app.use("/assets", express.static(path.join(__dirname, "dist")));
+app.use("/resources", express.static(path.join(__dirname, "public", "images")))
 app.use("/resources", express.static(path.resolve(__dirname, "storage", "images")));
 
 app.post('/api/scripts/:moduleName/:scriptId', (req, res) => {
