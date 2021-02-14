@@ -1,43 +1,13 @@
 @import '../../../styles/globals.scss';
 
 .container {
-
-	grid-area: scr;
-	background-color: $dark-3;
-	
-	display: flex;
-	flex-direction: column;
-	overflow: hidden auto;
-
-	& > .pane {
-		padding: .5rem;
-		
-
-		& > .title {
-			display: block;
-			text-transform: uppercase;
-			font-size: 1.2rem;
-			transform: translateX(1rem);
-			padding: .5rem;
-		}
-
-		& > .content {
-			display: block;
-			overflow: hidden;
-			transform: translateX(2rem);
-			transition: all .5s ease-in;
-			max-height: 0;
-
-			&.expanded {
-				max-height: 100%;
-			}
-
-			& > .script::after {
-				content: "TODO : implement style for script";
-				display: block;
-				color: red;
-				text-transform: uppercase;
-			}
-		}
-	}
+	position: fixed;
+	z-index: 1000;
+	top: 50%;
+	left: 50%;
+	height: 80vh;
+	width: 70vw;
+	transform: translate(-50%, -50%);
+	background-color: $dark-4;
+	border-radius: 2rem;
 }
