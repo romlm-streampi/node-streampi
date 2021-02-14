@@ -162,7 +162,12 @@ export default function ButtonParametrer({
 				</div></>)
 		}
 		{
-			addingScript && <ScriptPicker plugins={plugins} onPluginPicked={(plg) => { setAddingScript(false); console.log("picked", plg) }} />
+			addingScript && (<><ScriptPicker
+				plugins={plugins}
+				onPluginPicked={(plg) => { setAddingScript(false); console.log("picked", plg) }}
+				/>
+				<div className={styles.filter}></div>
+				</>)
 		}
 
 
