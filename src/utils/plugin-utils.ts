@@ -3,6 +3,7 @@ import { IScriptDescriptor } from "@model/script";
 
 
 export async function GetPlugins(names: string[]): Promise<PluginComponent[]> {
+
 	return await names.map(async (name) => {
 		try {
 			const pluginExports: PluginExport[] = (await import(`@plugins/${name}`)).default;
@@ -27,7 +28,7 @@ export async function GetPlugins(names: string[]): Promise<PluginComponent[]> {
 
 			return pluginComponents;
 		} catch(err) {
-			console.warn(err.message);
+			console.error(err.message);
 			return [];
 		}
 	}).reduce(async (a, b) => [...(await a), ...(await b)]);

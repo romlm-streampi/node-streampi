@@ -28,6 +28,8 @@ export default function ScriptPicker({ plugins, onPluginPicked }: IProps) {
 	const [pickedPlugin, setPickedPlugin] = useState<PluginComponent | undefined>(undefined);
 	const [orderedPlugins, setOrderedPlugins] = useState<any>({});
 
+	const LoadedComponent: JSX.Element = pickedPlugin?.component
+
 	useEffect(() => {
 		const categories = {};
 		plugins.forEach((plg) => {
@@ -76,7 +78,10 @@ export default function ScriptPicker({ plugins, onPluginPicked }: IProps) {
 		}
 
 		<div>
-			picked plugin: {pickedPlugin?.descriptor.info.displayName}
+			picked plugin:
+			{
+				pickedPlugin && <LoadedComponent bundle={pickedPlugin.bundle} />
+			}
 		</div>
 		<button onClick={() => onPluginPicked(undefined)}>exit</button>
 		<button onClick={() => onPluginPicked(pickedPlugin)}>add plugin</button>

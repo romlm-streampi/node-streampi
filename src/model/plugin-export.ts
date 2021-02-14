@@ -7,7 +7,7 @@ export interface PluginExport {
 	displayName?: string;
 	description?: string;
 	category?: string;
-	defaultParams?: {};
+	defaultParams?: any;
 }
 
 export class PluginBundle {
