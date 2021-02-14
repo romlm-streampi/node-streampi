@@ -1,7 +1,7 @@
 import { PluginComponent } from "@model/plugin-export";
 import { isEqual } from "lodash";
 import { nanoid } from "nanoid";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./script-picker.module.scss";
 
 interface IProps {
@@ -78,5 +78,7 @@ export default function ScriptPicker({ plugins, onPluginPicked }: IProps) {
 		<div>
 			picked plugin: {pickedPlugin?.descriptor.info.displayName}
 		</div>
+		<button onClick={() => onPluginPicked(undefined)}>exit</button>
+		<button onClick={() => onPluginPicked(pickedPlugin)}>add plugin</button>
 	</div>);
 }
