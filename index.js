@@ -10,6 +10,9 @@ const plugins = GetPlugins();
 
 const app = express();
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, "public"));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -106,7 +109,7 @@ app.post('/api/scripts/:moduleName/:scriptId', (req, res) => {
 
 		} catch (err) {
 			console.error(err)
-			res.status(500).json({err: err.message});
+			res.status(500).json({ err: err.message });
 		}
 	} else {
 		res.status(404).end();
@@ -133,8 +136,9 @@ app.get('/api/providers/:moduleName/:providerName', (req, res) => {
 	res.end();
 });
 
+app.get(['/', '/admin'], (_req, res) => res.render('index', { scriptName: "/assets/_admin.js" }))
 
-app.get(['/', "/client", "/admin"], (_req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
+app.get("/client", (_req, res) => res.render('index', { scriptName: "/assets/_client.js" }));
 
 app.listen(3000, () => console.log("successfully started server at localhost:3000"));
 

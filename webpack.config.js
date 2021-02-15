@@ -8,8 +8,7 @@ module.exports = {
 	target: "web",
 	entry: {
 		admin: "./pages/admin.tsx",
-		client: "./pages/client.tsx",
-		index: "./src/index.tsx"
+		client: "./pages/client.tsx"
 	},
 	output: {
 		filename: "_[name].js",

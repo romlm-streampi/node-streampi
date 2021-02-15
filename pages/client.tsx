@@ -3,6 +3,9 @@ import Layout, { IManagementPositioner, IPositioner, IScriptPositioner } from "@
 import { executeScript, getLayout } from "@utils/http-utils";
 import React from "react";
 import styles from "@styles/client.module.scss";
+import ReactDOM from "react-dom";
+
+import '@styles/styles.scss';
 
 
 interface IState {
@@ -26,23 +29,23 @@ export default class Client extends React.Component<{}, IState> {
 	componentDidMount() {
 		getLayout().then((layouts) => {
 			this.layouts = layouts;
-			this.setState({currentLayout: layouts[0]})
+			this.setState({ currentLayout: layouts[0] })
 		});
 	}
 
 	onButtonClicked = (pos: IPositioner) => {
 		let feature: any;
-		if(feature = (pos as IManagementPositioner).management) {
-			if(feature.type === "folder") {
-				if(feature.parameters.layoutId === "__parent__") {
-					this.setState({currentLayout: this.layouts[layoutArrIndexFromId(this.layouts, this.parentLayoutIds.pop())]})
+		if (feature = (pos as IManagementPositioner).management) {
+			if (feature.type === "folder") {
+				if (feature.parameters.layoutId === "__parent__") {
+					this.setState({ currentLayout: this.layouts[layoutArrIndexFromId(this.layouts, this.parentLayoutIds.pop())] })
 				} else {
 					const newLayout = this.layouts[layoutArrIndexFromId(this.layouts, feature.parameters.layoutId)]
 					this.parentLayoutIds.push(this.state.currentLayout.id);
-					this.setState({currentLayout: newLayout})
+					this.setState({ currentLayout: newLayout })
 				}
 			}
-		} else if(feature = (pos as IScriptPositioner).scripts) {
+		} else if (feature = (pos as IScriptPositioner).scripts) {
 			feature.forEach(executeScript)
 		}
 	}
@@ -63,3 +66,5 @@ export default class Client extends React.Component<{}, IState> {
 		)
 	}
 }
+
+ReactDOM.render(<Client />, document.getElementById("root"));

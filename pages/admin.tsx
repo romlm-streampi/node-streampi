@@ -6,6 +6,8 @@ import styles from "@styles/admin.module.scss";
 import { deleteImage, getLayout, getPluginNames, saveLayouts, sendFile } from "@utils/http-utils";
 import { GetPlugins } from "@utils/plugin-utils";
 import React from "react";
+import ReactDOM from "react-dom";
+import "@styles/styles.scss";
 
 
 interface IState {
@@ -163,3 +165,5 @@ export default class Admin extends React.Component<{}, IState> {
 		)
 	}
 }
+
+ReactDOM.render(<Admin />, document.getElementById("root"));
