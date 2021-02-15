@@ -32,10 +32,11 @@ const EmptyButton = ({ position, onClick }: { position: IPositioner, onClick: Fu
 interface IProps {
 	layout: Layout;
 	onButtonClicked: (positioner: IPositioner) => void;
+	client?: boolean;
 }
 
 
-export default function Visualizer({ layout, onButtonClicked }: IProps) {
+export default function Visualizer({ layout, onButtonClicked, client=false }: IProps) {
 
 	let sizeStyle;
 	if (isEqual(layout.size, { colNumber: 3, rowNumber: 2 })) {
@@ -49,7 +50,7 @@ export default function Visualizer({ layout, onButtonClicked }: IProps) {
 	}
 
 	return (
-		<div className={[styles.container, sizeStyle].join(' ')}>
+		<div className={[styles.container, sizeStyle, !client ? styles["container-admin"] : ""].join(' ')}>
 			{
 				range(1, layout.size.colNumber + 1).map(colIndex => {
 					return range(1, layout.size.rowNumber + 1).map(rowIndex => {

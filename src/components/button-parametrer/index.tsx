@@ -128,11 +128,14 @@ export default function ButtonParametrer({
 	const onScriptUpdated = (params: any) => {
 		const currentScript = buttonFeatures.scripts[scriptArrIndexFromId(buttonFeatures.scripts, pickedScript.scriptId)];
 		currentScript.parameters = params;
+		onPositionerSave({scripts: buttonFeatures.scripts});
 	}
 
 	const onScriptDelete = (ev: React.MouseEvent<HTMLButtonElement>) => {
 		ev.preventDefault();
-		setButtonFeatures({scripts: buttonFeatures.scripts.filter(({id}) => id !== pickedScript.scriptId)});
+		const scripts = buttonFeatures.scripts.filter(({id}) => id !== pickedScript.scriptId);
+		setButtonFeatures({scripts});
+		onPositionerSave({scripts});
 		setPickedScript(undefined);
 	}
 

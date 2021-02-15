@@ -101,10 +101,12 @@ app.post('/api/scripts/:moduleName/:scriptId', (req, res) => {
 	if (plugin && plugin.scripts && plugin.scripts[scriptId]) {
 		const script = plugin.scripts[scriptId];
 		try {
+			console.log(params)
 			res.json(script(params));
 
 		} catch (err) {
-			res.status(500).end();
+			console.error(err)
+			res.status(500).json({err: err.message});
 		}
 	} else {
 		res.status(404).end();
