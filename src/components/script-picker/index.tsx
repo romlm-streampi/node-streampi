@@ -44,44 +44,61 @@ export default function ScriptPicker({ plugins, onPluginPicked }: IProps) {
 
 
 	return (<div className={styles.container}>
-		{
-
-
-			Object.keys(orderedPlugins).sort(sortCategories).map((category) => {
-
-				const plgList = orderedPlugins[category];
-
-
-				return (<div key={nanoid()}>
-					<span>{category}</span>
-					{plgList.map((plg) => {
-						const id = nanoid();
-						const { descriptor: { info: { displayName }, id: scriptId } } = plg;
-						return (
-							<span key={id}>
-								<label htmlFor={`script-radio-${id}`}>{displayName}</label>
-								<input
-									type="radio"
-									id={`script-radio-${id}`}
-									value={[scriptId.moduleName, scriptId.script]}
-									onChange={(ev) => ev.target.checked && setPickedPlugin(plg)}
-									name="script"
-									checked={isEqual(plg.descriptor.id, pickedPlugin?.descriptor.id)}
-								/>
-							</span>
-						)
-					})}
-				</div>)
-			})
-		}
-
-		<div>
-			picked plugin:
+		<div className={styles["script-list"]}>
 			{
-				pickedPlugin?.descriptor.info.displayName
+
+
+				Object.keys(orderedPlugins).sort(sortCategories).map((category) => {
+
+					const plgList = orderedPlugins[category];
+
+
+					return (<div key={nanoid()} className={styles["category-pane"]}>
+						<div className={styles["pane-title"]}>{category}</div>
+						{plgList.map((plg) => {
+							const id = nanoid();
+							const { descriptor: { info: { displayName }, id: scriptId } } = plg;
+							return (
+								<div key={id} className={styles.script}>
+									<input
+										type="radio"
+										id={`script-radio-${id}`}
+										value={[scriptId.moduleName, scriptId.script]}
+										onChange={(ev) => ev.target.checked && setPickedPlugin(plg)}
+										name="script"
+										checked={isEqual(plg.descriptor.id, pickedPlugin?.descriptor.id)}
+									/>
+									<label htmlFor={`script-radio-${id}`}>{displayName}</label>
+								</div>
+							)
+						})}
+					</div>)
+				})
 			}
 		</div>
-		<button onClick={() => onPluginPicked(undefined)}>exit</button>
-		<button onClick={() => onPluginPicked(pickedPlugin)}>add plugin</button>
+
+		{
+			pickedPlugin && (
+				<div className={styles["script-visualizer"]}>
+					<div>module: {pickedPlugin.descriptor.id.moduleName}</div>
+					<div>name: {pickedPlugin.descriptor.info.displayName}</div>
+					{
+						pickedPlugin.descriptor.info.description && (<div>
+							descripton: {pickedPlugin.descriptor.info.description}
+						</div>)
+					}
+				</div>
+			)
+		}
+
+		<button onClick={() => onPluginPicked(pickedPlugin)} className={styles.save}>add plugin</button>
+		<button onClick={() => onPluginPicked(undefined)} className={styles.exit}>
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+				<path d="M0 0h24v24H0z" fill="none" />
+				<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+			</svg>
+		</button>
+
+
 	</div>);
 }

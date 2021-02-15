@@ -118,24 +118,27 @@ export default function ButtonParametrer({
 		}
 	}
 
-	const onPluginPicked = (plugin: PluginScript) => {
+	const onPluginPicked = (plugin?: PluginScript) => {
 		setScriptPickerShown(false);
-		const script = NewScriptInstance({descriptor: plugin.descriptor});
-		setButtonFeatures({ scripts: [...buttonFeatures.scripts, script] })
-		setPickedScript({ scriptId: script.id, plugin })
+		if (plugin) {
+			const script = NewScriptInstance({ descriptor: plugin.descriptor });
+			setButtonFeatures({ scripts: [...buttonFeatures.scripts, script] })
+			setPickedScript({ scriptId: script.id, plugin })
+		}
+
 	}
 
 	const onScriptUpdated = (params: any) => {
 		const currentScript = buttonFeatures.scripts[scriptArrIndexFromId(buttonFeatures.scripts, pickedScript.scriptId)];
 		currentScript.parameters = params;
-		onPositionerSave({scripts: buttonFeatures.scripts});
+		onPositionerSave({ scripts: buttonFeatures.scripts });
 	}
 
 	const onScriptDelete = (ev: React.MouseEvent<HTMLButtonElement>) => {
 		ev.preventDefault();
-		const scripts = buttonFeatures.scripts.filter(({id}) => id !== pickedScript.scriptId);
-		setButtonFeatures({scripts});
-		onPositionerSave({scripts});
+		const scripts = buttonFeatures.scripts.filter(({ id }) => id !== pickedScript.scriptId);
+		setButtonFeatures({ scripts });
+		onPositionerSave({ scripts });
 		setPickedScript(undefined);
 	}
 
@@ -149,10 +152,11 @@ export default function ButtonParametrer({
 				}
 
 			</label>
-			<select onChange={onTypeChanged} value={buttonFeatures.scripts ? "script" : "folder"}>
+			<select onChange={onTypeChanged} id="button-type-input" value={buttonFeatures.scripts ? "script" : "folder"} className={styles["type-input"]}>
 				<option value="script">script</option>
 				<option value="folder">folder</option>
 			</select>
+			<label htmlFor="button-type-input">button type: </label>
 			<input type="text" id="button-text-input" value={info?.text} className={styles['text-input']} onChange={onTextChange} />
 			<label htmlFor="button-text-input">icon title: </label>
 

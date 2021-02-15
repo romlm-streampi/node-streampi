@@ -20,6 +20,8 @@
 
 		grid-template-areas:'icon icon'
 							'icon icon'
+							'icon icon'
+							'typeLabel type'
 							'textLabel text'
 							'delete save';
 
@@ -38,8 +40,19 @@
 			}
 		}
 
+		& > .type-input {
+			grid-area: type;
+			display: flex;
+
+			& + label {
+				display: flex;
+				grid-area: typeLabel;
+				justify-content: center;
+				align-items: center;
+			}
+		}
+
 		& > .text-input {
-			all: unset;
 			grid-area: text;
 			display: flex;
 
