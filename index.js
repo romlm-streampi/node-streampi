@@ -4,14 +4,16 @@ const bodyParser = require('body-parser');
 const multer = require("multer");
 const fs = require("fs");
 const { GetPlugins } = require("./server-model/plugins");
+const mustache = require("mustache-express");
 
 
 const plugins = GetPlugins();
 
 const app = express();
 
-app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, "public"));
+app.set('view engine', 'html');
+app.engine('html', mustache());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
