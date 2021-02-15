@@ -1,7 +1,7 @@
 import ButtonParametrer from "@components/button-parametrer";
 import Visualizer from "@components/visualizer";
 import Layout, { SetPositioner, createLayout, IManagementPositioner, IPositioner, RemovePositioner, IsManagementScript, IScriptPositioner, IPositionerInfo } from "@model/layout";
-import { PluginComponent } from "@model/plugin-export";
+import { PluginScript } from "@model/plugin-export";
 import styles from "@styles/admin.module.scss";
 import { deleteImage, getLayout, getPluginNames, saveLayouts, sendFile } from "@utils/http-utils";
 import { GetPlugins } from "@utils/plugin-utils";
@@ -10,7 +10,7 @@ import React from "react";
 
 interface IState {
 	currentLayoutId?: string;
-	plugins?: PluginComponent[];
+	plugins?: PluginScript[];
 	currentButton?: IPositioner;
 }
 

@@ -1,12 +1,12 @@
-import { PluginComponent } from "@model/plugin-export";
+import { PluginScript } from "@model/plugin-export";
 import { isEqual } from "lodash";
 import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
 import styles from "./script-picker.module.scss";
 
 interface IProps {
-	plugins: PluginComponent[];
-	onPluginPicked: (plg: PluginComponent) => void;
+	plugins: PluginScript[];
+	onPluginPicked: (plg: PluginScript) => void;
 }
 
 const sortCategories = (a: string, b: string): number => {
@@ -25,10 +25,8 @@ const sortCategories = (a: string, b: string): number => {
 
 export default function ScriptPicker({ plugins, onPluginPicked }: IProps) {
 
-	const [pickedPlugin, setPickedPlugin] = useState<PluginComponent | undefined>(undefined);
+	const [pickedPlugin, setPickedPlugin] = useState<PluginScript | undefined>(undefined);
 	const [orderedPlugins, setOrderedPlugins] = useState<any>({});
-
-	const LoadedComponent: JSX.Element = pickedPlugin?.component
 
 	useEffect(() => {
 		const categories = {};
@@ -80,7 +78,7 @@ export default function ScriptPicker({ plugins, onPluginPicked }: IProps) {
 		<div>
 			picked plugin:
 			{
-				pickedPlugin && <LoadedComponent bundle={pickedPlugin.bundle} />
+				pickedPlugin?.descriptor.info.displayName
 			}
 		</div>
 		<button onClick={() => onPluginPicked(undefined)}>exit</button>

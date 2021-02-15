@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 
 export interface IScriptIdentifier {
 	moduleName: string;
@@ -13,10 +14,12 @@ export interface IScriptInfo {
 export interface IScriptDescriptor {
 	id: IScriptIdentifier;
 	info: IScriptInfo;
-	defaultParams?: any;
 }
 
 export interface IScriptInstance {
+	id: string;
 	descriptor: IScriptDescriptor;
 	parameters?: any;
 }
+
+export const NewScriptInstance = ({ id = nanoid(), descriptor, parameters = {} }: { id?: string, descriptor: IScriptDescriptor, parameters?: any }): IScriptInstance => ({ id, descriptor, parameters })

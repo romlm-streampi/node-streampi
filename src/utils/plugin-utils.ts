@@ -1,13 +1,13 @@
-import { PluginBundle, PluginComponent, PluginExport } from "@model/plugin-export";
+import { PluginBundle, PluginScript, PluginExport } from "@model/plugin-export";
 import { IScriptDescriptor } from "@model/script";
 
 
-export async function GetPlugins(names: string[]): Promise<PluginComponent[]> {
+export async function GetPlugins(names: string[]): Promise<PluginScript[]> {
 
 	return await names.map(async (name) => {
 		try {
 			const pluginExports: PluginExport[] = (await import(`@plugins/${name}`)).default;
-			const pluginComponents: PluginComponent[] = [];
+			const pluginComponents: PluginScript[] = [];
 			for (let exp of pluginExports.filter(({ script, component }) => (script && component))) {
 				const descriptor: IScriptDescriptor = {
 					id: {

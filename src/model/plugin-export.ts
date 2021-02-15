@@ -1,4 +1,5 @@
 import { getProvider } from "@utils/http-utils";
+import { isEqual } from "lodash";
 import { IScriptDescriptor, IScriptIdentifier } from "./script";
 
 export interface PluginExport {
@@ -7,20 +8,31 @@ export interface PluginExport {
 	displayName?: string;
 	description?: string;
 	category?: string;
-	defaultParams?: any;
 }
 
+interface PluginComponentProps {
+	bundle: PluginBundle;
+	onParametersChanged: (parameters: any) => void;
+	currentParameters?: any;
+}
+
+export type PluginComponent = React.ReactElement<PluginComponentProps, any>;
+
 export class PluginBundle {
-	constructor(public readonly scriptId: IScriptIdentifier) {}
+	constructor(public readonly scriptId: IScriptIdentifier) { }
 
 	async getProvider(name: string) {
-		const {moduleName} = this.scriptId;
-		return await getProvider({moduleName, script: name});
+		const { moduleName } = this.scriptId;
+		return await getProvider({ moduleName, script: name });
 	}
 }
 
-export interface PluginComponent {
+export function GetPluginScriptFromId(plugins: PluginScript[], scriptId: IScriptIdentifier) {
+	return plugins.find(({ descriptor: { id } }) => isEqual(id, scriptId));
+}
+
+export interface PluginScript {
 	descriptor: IScriptDescriptor;
-	component: JSX.Element;
+	component: PluginComponent;
 	bundle: PluginBundle;
 }

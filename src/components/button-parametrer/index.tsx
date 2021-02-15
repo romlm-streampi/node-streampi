@@ -1,7 +1,7 @@
 import ScriptPicker from "@components/script-picker";
-import Layout, { IManagementPositioner, IPositioner, IPositionerInfo, IScriptPositioner, IsManagementScript } from "@model/layout";
-import { PluginComponent } from "@model/plugin-export";
-import { IScriptInstance } from "@model/script";
+import { IManagementPositioner, IPositioner, IPositionerInfo, IScriptPositioner } from "@model/layout";
+import { GetPluginScriptFromId, PluginComponent, PluginScript } from "@model/plugin-export";
+import { IScriptInstance, NewScriptInstance } from "@model/script";
 import { nanoid } from "nanoid";
 import React, { useEffect, useRef, useState } from "react";
 import styles from './button-parametrer.module.scss';
@@ -15,7 +15,7 @@ const FolderPane = ({ onClick }: { onClick: any }) => (
 
 interface IProps {
 	button: IPositioner;
-	plugins: PluginComponent[];
+	plugins: PluginScript[];
 	onPositionerSave: (info: {
 		info?: {
 			icon: File,
@@ -31,6 +31,19 @@ interface IProps {
 	onLayoutChangeRequest: (layoutId: string) => void;
 }
 
+const getDefaultButtonFeatures = (button: IPositioner) => {
+	const defaultButtonFeatures = {
+		management: (button as IManagementPositioner).management,
+		scripts: (button as IScriptPositioner).scripts
+	};
+	if (defaultButtonFeatures.management == undefined && defaultButtonFeatures.scripts == undefined) {
+		defaultButtonFeatures.scripts = [];
+	}
+	return defaultButtonFeatures;
+}
+
+export const scriptArrIndexFromId = (scripts: IScriptInstance[], scriptId: string) => scripts.map((scr, index) => ({ ...scr, index })).find(({ id }) => id === scriptId)?.index
+
 export default function ButtonParametrer({
 	button,
 	onPositionerDelete,
@@ -40,16 +53,17 @@ export default function ButtonParametrer({
 }: IProps) {
 
 	const [info, setInfo] = useState<IPositionerInfo>(button.info || { text: "", iconPath: "" });
-	const [isScript, setIsScript] = useState<Boolean>((button as IManagementPositioner).management === undefined);
-	const [pickedScript, setPickedScript] = useState<IScriptInstance | undefined>();
-	const [addingScript, setAddingScript] = useState(false);
+
+	const [buttonFeatures, setButtonFeatures] = useState<{ management?: any, scripts?: IScriptInstance[] }>(getDefaultButtonFeatures(button));
+	const [pickedScript, setPickedScript] = useState<{ scriptId: string, plugin: PluginScript } | undefined>();
+	const [scriptPickerShown, setScriptPickerShown] = useState(false);
 
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
 		fileInputRef.current.files = new DataTransfer().files;
 		setInfo(button.info || { text: "", iconPath: "" });
-		setIsScript((button as IManagementPositioner).management === undefined);
+		setButtonFeatures(getDefaultButtonFeatures(button));
 		setPickedScript(undefined);
 	}, [button]);
 
@@ -78,28 +92,48 @@ export default function ButtonParametrer({
 		if (info.text) {
 			res.info = { ...res.info, text: info.text };
 		}
-		if (isScript) {
-			res.scripts = []
+		if (buttonFeatures.scripts) {
+			res.scripts = buttonFeatures.scripts
 		} else {
 			res.management = { type: "folder" };
 		}
 		onPositionerSave(res);
 	}
 
-	const onScriptPicked = (ins: IScriptInstance) => {
-		setPickedScript(ins);
+	const onScriptPicked = (script: IScriptInstance) => {
+		const plugin = GetPluginScriptFromId(plugins, script.descriptor.id);
+		if (plugin)
+			setPickedScript({ scriptId: script.id, plugin });
 	}
 
 	const onTypeChanged = (ev: React.ChangeEvent<HTMLSelectElement>) => {
 		ev.preventDefault();
 		switch (ev.target.value) {
 			case "script":
-				setIsScript(true);
+				setButtonFeatures({ scripts: [] });
 				break;
 			case "folder":
-				setIsScript(false);
+				setButtonFeatures({ management: { type: "folder" } });
 				break;
 		}
+	}
+
+	const onPluginPicked = (plugin: PluginScript) => {
+		setScriptPickerShown(false);
+		const script = NewScriptInstance({descriptor: plugin.descriptor});
+		setButtonFeatures({ scripts: [...buttonFeatures.scripts, script] })
+		setPickedScript({ scriptId: script.id, plugin })
+	}
+
+	const onScriptUpdated = (params: any) => {
+		const currentScript = buttonFeatures.scripts[scriptArrIndexFromId(buttonFeatures.scripts, pickedScript.scriptId)];
+		currentScript.parameters = params;
+	}
+
+	const onScriptDelete = (ev: React.MouseEvent<HTMLButtonElement>) => {
+		ev.preventDefault();
+		setButtonFeatures({scripts: buttonFeatures.scripts.filter(({id}) => id !== pickedScript.scriptId)});
+		setPickedScript(undefined);
 	}
 
 	return (<div className={styles.container}>
@@ -112,7 +146,7 @@ export default function ButtonParametrer({
 				}
 
 			</label>
-			<select onChange={onTypeChanged} value={isScript ? "script" : "folder"}>
+			<select onChange={onTypeChanged} value={buttonFeatures.scripts ? "script" : "folder"}>
 				<option value="script">script</option>
 				<option value="folder">folder</option>
 			</select>
@@ -125,18 +159,21 @@ export default function ButtonParametrer({
 
 		</form>
 		{
-			!isScript ? (() => {
+			buttonFeatures.management && (() => {
 				const layoutId = (button as IManagementPositioner).management?.parameters?.layoutId;
 				if (layoutId)
 					return <FolderPane
 						onClick={() => onLayoutChangeRequest(layoutId)}
 					/>
-				else 
+				else
 					return (<div className={styles["folder-pane"]}>save to generate folder</div>)
-			})() : (<><div className={styles.scripts}>
+			})()
+		}
+		{
+			buttonFeatures.scripts && (<><div className={styles.scripts}>
 				<ul className={styles.list}>
 					{
-						((button as IScriptPositioner).scripts || []).map((ins: IScriptInstance) => {
+						buttonFeatures.scripts.map((ins: IScriptInstance) => {
 							return (<li
 								className={styles.script}
 								key={nanoid()}
@@ -147,27 +184,32 @@ export default function ButtonParametrer({
 					}
 				</ul>
 				<div className={styles.buttons}>
-					<button onClick={() => console.log("TODO: implement script deleter")} className={styles["delete-script"]}>delete script</button>
-					<button onClick={() => setAddingScript(true)} className={styles["add-script"]}>add script</button>
+					<button onClick={onScriptDelete} className={styles["delete-script"]}>delete script</button>
+					<button onClick={() => setScriptPickerShown(true)} className={styles["add-script"]}>add script</button>
 				</div>
 			</div>
 
 				<div className={styles.param}>
 					{
 						pickedScript ? (<>
-							{pickedScript.parameters}
+							{
+								<pickedScript.plugin.component
+									bundle={pickedScript.plugin.bundle}
+									onParametersChanged={onScriptUpdated}
+									currentParameters={buttonFeatures.scripts[scriptArrIndexFromId(buttonFeatures.scripts, pickedScript.scriptId)].parameters} />
+							}
 						</>)
 							: <>pick a script in the list or add one</>
 					}
 				</div></>)
 		}
 		{
-			addingScript && (<><ScriptPicker
+			scriptPickerShown && (<><ScriptPicker
 				plugins={plugins}
-				onPluginPicked={(plg) => { setAddingScript(false); console.log("picked", plg) }}
-				/>
+				onPluginPicked={onPluginPicked}
+			/>
 				<div className={styles.filter}></div>
-				</>)
+			</>)
 		}
 
 
